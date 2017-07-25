@@ -9,14 +9,14 @@ import {AuthenticationPage} from '../authentication/authentication';
 })
 
 export class HomePage {
-    ownerName: string;
+    ownerRights: string;
 
     constructor(private app: IonicApp, private nav: NavController, private menuController: MenuController, private userService: UserService, private alertCtrl: AlertController ) {
     }
 
     onPageLoaded(){
         this.menuController.enable(true);
-        this.ownerName = this.userService.loggedUser.firstName + " " + this.userService.loggedUser.lastName;
+        this.ownerRights = this.userService.loggedUser.rights;
     }
 
     onPageWillEnter() {
@@ -31,10 +31,7 @@ export class HomePage {
     onPageDidUnload() {}
 
     disconnect() {
-        let successCallback = this.disconnectSucess;
-        let errorCallback = this.errorPopup;
-        let callbackComponent = this.nav;
-        this.userService.disconnect(this.userService.loggedUser, successCallback, errorCallback, callbackComponent);
+
     }
 
     disconnectSucess(nav: any) {

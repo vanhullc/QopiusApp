@@ -1,145 +1,103 @@
 import {Injectable} from '@angular/core';
-import {Http, Headers, RequestOptions} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
-
 import {ErrorService} from './errorServices';
-
 import {qopiusUser} from '../models/qopiusUser';
 import {RestMessage} from '../models/restMessage';
+import { Http } from '@angular/http';
 
 import 'rxjs/Rx';
 
 let favorites = [],
-    domain = "http://www.valleydesigners.com",
-    loginURL = domain + "/mobileApp/MobileAppUserCross/login",
+    domain = "http://apiqube.com/debug",
+    loginURL = domain + "/session",
     disconnectURL = domain + "/mobileApp/MobileAppUserCross/disconnect"
 
 @Injectable()
+
 export class UserService {
-    loggedUser: qopiusUser;
-    http: Http;
-    errorService: ErrorService;
-    private _loggerHeader = "error in userServices";
+  loggedUser: qopiusUser;
+  http: Http;
+  errorService: ErrorService;
+  private _loggerHeader = "error in userServices";
 
-    constructor ( http: Http, errorService: ErrorService ) {
-      this.http = http;
-      this.errorService = errorService;
+  constructor ( http: Http, errorService: ErrorService ) {
+    this.http = http;
+    this.errorService = errorService;
+  }
+
+  init(){
+    this.initUser();
+  }
+
+  //******************************************************************************
+  //REST CALLS********************************************************************
+  //******************************************************************************
+  callLogin( name: string, password: string ) {
+    console.log("callLogin");
+    let loggerMethod: string = ".callLogin";
+    let body = {
+
     }
+    let headers = new Headers({
+      'Content-Type': 'application/form-data'
+    });
+    let options:any = ({
+      headers: headers
+    });
+    let loginURLUser = loginURL + "?name=" + name + "&password=" + password;
+    return this.http.post( loginURLUser, body)
+        .map( res => res.json() )
+        .catch( this.errorService.handleCallError );
+  }
 
-    init(){
-      this.initUser();
-    }
-
-//******************************************************************************
-//REST CALLS********************************************************************
-//******************************************************************************
-    callLogin( user: qopiusUser ) {
-      let loggerMethod: string = ".callLogin";
-      let body = "locale=fr_US&email=" + user.email + "&password=" + user.password;
-      let headers = new Headers({
-        'Content-Type': 'application/x-www-form-urlencoded'
-      });
-      let options = new RequestOptions({
-        headers: headers
-      });
-      return this.http.post( loginURL, body, options )
-          .map( res => res.json() )
-          .catch( this.errorService.handleCallError );
-    }
-
-    callDisconnect( mobileTokenSessionId: string) {
-        let loggerMethod: string = ".callDisconnect";
-        let body = "locale=fr_US";
-        if (this.loggedUser && this.loggedUser.sessionToken){
-          let sessionToken: string = this.loggedUser.sessionToken;
-          body += "&sessionToken=" + sessionToken;
+  //******************************************************************************
+  //PUBLIC METHODS****************************************************************
+  //******************************************************************************
+  login( name: string, password: string, successCallback: ( nav: any ) => void, errorCallback: ( errorMessage: Observable<string>, nav: any ) => void, component:any ) {
+    console.log("login");
+    let loggerMethod: string = ".login";
+    let restMessage: RestMessage;
+    this.callLogin(name, password).subscribe(
+      //observable.next
+      data => {
+        restMessage = data;
+      },
+      //observable.error
+      error => {
+        errorCallback( this.errorService.handleSubscribeError( error, this._loggerHeader + loggerMethod), component );
+      },
+      //observable.complete
+      () => {
+        if(restMessage.status == "success") {
+            this.loggedUser = restMessage.singleResult;
+            successCallback(component);
+        }else if ( restMessage.status == "failure" ){
+          errorCallback( this.errorService.handleRestMessageError( restMessage.errors, this._loggerHeader + loggerMethod), component );
+        }else{
+          let errorMessage = "restMessageStatus undefinied: bad request";
+          console.error( this._loggerHeader + loggerMethod + errorMessage);
+          errorCallback( this.errorService.handleUndefinedRestMessageError( this._loggerHeader + loggerMethod), component );
         }
-        let headers = new Headers({
-          'Content-Type': 'application/x-www-form-urlencoded'
-        });
-        let options = new RequestOptions({
-          headers: headers
-        });
-        return this.http.post( disconnectURL, body, options )
-            .map( res => res.json() )
-            .catch( this.errorService.handleCallError );
     }
-//******************************************************************************
-//PUBLIC METHODS****************************************************************
-//******************************************************************************
-    login( user: qopiusUser, successCallback: ( nav: any ) => void, errorCallback: ( errorMessage: Observable<string>, nav: any ) => void, component:any ) {
-      let loggerMethod: string = ".login";
-      let restMessage: RestMessage;
-      this.callLogin(user).subscribe(
-        //observable.next
-        data => {
-          restMessage = data;
-        },
-        //observable.error
-        error => {
-          errorCallback( this.errorService.handleSubscribeError( error, this._loggerHeader + loggerMethod), component );
-        },
-        //observable.complete
-        () => {
-          if(restMessage.status == "success") {
-              this.loggedUser = restMessage.singleResult;
-              successCallback(component);
-          }else if ( restMessage.status == "failure" ){
-            errorCallback( this.errorService.handleRestMessageError( restMessage.errors, this._loggerHeader + loggerMethod), component );
-          }else{
-            let errorMessage = "restMessageStatus undefinied: bad request";
-            console.error( this._loggerHeader + loggerMethod + errorMessage);
-            errorCallback( this.errorService.handleUndefinedRestMessageError( this._loggerHeader + loggerMethod), component );
-          }
-      }
-      );
-    }
+    );
+  }
 
-    disconnect( user: qopiusUser, successCallback: ( nav: any ) => void, errorCallback: ( errorMessage: Observable<string>, nav: any ) => void, component:any ) {
-        console.log("session= " + this.loggedUser.sessionToken);
-        let loggerMethod: string = ".disconnect";
-        let restMessage: RestMessage;
-        this.callDisconnect(user.sessionToken).subscribe(
-          //observable.next
-          data => {
-            restMessage = data;
-          },
-          //observable.error
-          error => {
-            errorCallback( this.errorService.handleSubscribeError( error, this._loggerHeader + loggerMethod), component );
-          },
-          //observable.complete
-          () => {
-            if(restMessage.status == "success") {
-                this.initUser();
-                successCallback(component);
-                //console.log("sessionFinale= " + this.loggedUser.sessionToken);
-            }else if ( restMessage.status == "failure" ){
-              errorCallback( this.errorService.handleRestMessageError( restMessage.errors, this._loggerHeader + loggerMethod), component );
-            }else{
-              let errorMessage = "restMessageStatus undefinied: bad request";
-              console.error( this._loggerHeader + loggerMethod + errorMessage);
-              errorCallback( this.errorService.handleUndefinedRestMessageError( this._loggerHeader + loggerMethod), component );
-            }
-        }
-        );
-    }
-//******************************************************************************
-//ERRORS HANDLING***************************************************************
-//******************************************************************************
 
-//******************************************************************************
-//PRIVATE METHODS***************************************************************
-//******************************************************************************
-private initUser() {
-  this.loggedUser = {
-    "idUser": "",
-    "firstName": "",
-    "lastName": "",
-    "email": "",
-    "password": "",
-    "sessionToken": ""
-  };
-}
+  //******************************************************************************
+  //ERRORS HANDLING***************************************************************
+  //******************************************************************************
 
+  //******************************************************************************
+  //PRIVATE METHODS***************************************************************
+  //******************************************************************************
+  private initUser() {
+    this.loggedUser = {
+      "toolkits": [],
+      "rights": "",
+      "companyID": "",
+      "companyName": "",
+      "session_password": "",
+      "accountID": ""
+    };
+  }
 }

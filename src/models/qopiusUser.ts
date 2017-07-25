@@ -1,17 +1,17 @@
 export class qopiusUser {
-  idUser: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  sessionToken: string;
+  toolkits: string[];
+  rights: string;
+  companyID: string;
+  companyName: string;
+  session_password: string;
+  accountID: string;
 
-  constructor( idUser: string, firstName: string, lastName: string, email: string, password: string, sessionToken: string ) {
-    this.idUser = idUser;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.email = email;
-    this.password = password;
-    this.sessionToken = sessionToken;
+  constructor( toolkits: string[], rights: string, companyID: string, companyName: string, session_password: string, accountID: string ) {
+    this.toolkits = toolkits;
+    this.rights = rights;
+    this.companyID = companyID;
+    this.companyName = companyName;
+    this.session_password = session_password;
+    this.accountID = accountID;
   }
 }
