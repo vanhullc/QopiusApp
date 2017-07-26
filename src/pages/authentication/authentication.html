@@ -1,17 +1,21 @@
-<ion-navbar *navbar>
+<ion-header>
+
+  <ion-navbar *navbar>
     <ion-title>Login</ion-title>
-</ion-navbar>
+  </ion-navbar>
+
+</ion-header>
 
 <ion-content id="authentificationContent" padding>
-    <p id="loginTitle">Qopius v.</p>
-    <form [formGroup]="loginForm" (ngSubmit)="login($event)">
+    <p id="loginTitle">Qopius v.0.1</p>
+    <form (ngSubmit)="login()">
         <ion-item>
-            <ion-label id="nameLabel" for="name">name</ion-label>
-            <ion-input id="name" name="name" type="string" required></ion-input>
+            <ion-label id="usernameLabel" for="username">Username</ion-label>
+            <ion-input  [(ngModel)]="account.username" id="username" name="username" type="string" required></ion-input>
         </ion-item>
         <ion-item >
             <ion-label id="passwordLabel" for="password">Password</ion-label>
-            <ion-input id="password" name="password" type="password" required></ion-input>
+            <ion-input  [(ngModel)]="account.password" id="password" name="password" type="password" required></ion-input>
         </ion-item>
         <button block type="submit">Login</button>
     </form>

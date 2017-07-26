@@ -1,0 +1,19 @@
+<ion-header>
+
+  <ion-navbar *navbar>
+    <ion-title>Home</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content>
+
+  <ion-card *ngFor="let toolkit of toolkits">
+
+    <ion-item>
+      <h2>{{toolkit}}</h2>
+    </ion-item>
+
+  </ion-card>
+
+</ion-content>

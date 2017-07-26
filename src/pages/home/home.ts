@@ -1,22 +1,20 @@
-import {IonicApp, MenuController, NavController, AlertController } from 'ionic-angular';
+import { NavController } from 'ionic-angular';
 import { Component } from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {UserService} from '../../services/userServices';
-import {AuthenticationPage} from '../authentication/authentication';
+
+import { User } from '../../services/user';
 
 @Component({
   templateUrl: 'home.html'
 })
 
 export class HomePage {
-    ownerRights: string;
-
-    constructor(private app: IonicApp, private nav: NavController, private menuController: MenuController, private userService: UserService, private alertCtrl: AlertController ) {
+    toolkits: any[];
+    constructor(private nav: NavController , private userService: User ) {
+        this.toolkits = this.userService._user.toolkits;
     }
 
     onPageLoaded(){
-        this.menuController.enable(true);
-        this.ownerRights = this.userService.loggedUser.rights;
+
     }
 
     onPageWillEnter() {
@@ -32,38 +30,5 @@ export class HomePage {
 
     disconnect() {
 
-    }
-
-    disconnectSucess(nav: any) {
-        nav.setRoot(AuthenticationPage);
-    }
-
-    errorPopup(messageToDisplay: Observable<string>, nav: any){
-        let message: string;
-        messageToDisplay.subscribe(
-            data => {
-                message = data;
-            },
-            error => {
-                //todo
-            },
-            () => {
-                let alert = this.alertCtrl.create(
-                    {
-                        title: 'Disconnect Failed',
-                        message: ''+ message,
-                        buttons: [
-                            {
-                                text:'Ok',
-                                handler: () => {
-                                    //do nothing on complete
-                                }
-                            }
-                        ]
-                    }
-                );
-                nav.present(alert);
-            }
-        );
     }
 }
