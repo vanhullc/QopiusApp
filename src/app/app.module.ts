@@ -6,12 +6,14 @@ import { Storage, IonicStorageModule } from '@ionic/storage';
 
 import { MyApp } from './app.component';
 
+import { CanvasPage } from '../pages/canvas/canvas';
 import { HomePage } from '../pages/home/home';
 import { AuthenticationPage } from '../pages/authentication/authentication';
 
 import { Api } from '../services/api';
 import { User } from '../services/user';
 import { Settings } from '../services/settings';
+import { Image } from '../services/image';
 
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -32,6 +34,7 @@ export function provideSettings(storage: Storage) {
 @NgModule({
   declarations: [
     MyApp,
+    CanvasPage,
     HomePage,
     AuthenticationPage
   ],
@@ -44,12 +47,14 @@ export function provideSettings(storage: Storage) {
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
+    CanvasPage,
     AuthenticationPage,
     HomePage
   ],
   providers: [
     Api,
     User,
+    Image,
     StatusBar,
     SplashScreen,
     { provide: Settings, useFactory: provideSettings, deps: [Storage] },

@@ -3,14 +3,22 @@ import { Component } from '@angular/core';
 
 import { User } from '../../services/user';
 
+import { CanvasPage } from '../canvas/canvas';
+
 @Component({
   templateUrl: 'home.html'
 })
 
 export class HomePage {
-    toolkits: any[];
+    _toolkits: any[];
     constructor(private nav: NavController , private userService: User ) {
-        this.toolkits = this.userService._user.toolkits;
+        this._toolkits = this.userService._user.toolkits;
+    }
+
+    openToolkitPage(toolkit:any) {
+        this.nav.push(CanvasPage, {
+            _toolkit: toolkit
+        });
     }
 
     onPageLoaded(){

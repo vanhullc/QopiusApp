@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
-import {qopiusUser} from '../models/qopiusUser';
+import { qopiusUser } from '../models/qopiusUser';
 
 import { Api } from '../services/api';
 
@@ -16,7 +16,7 @@ export class User {
   _user: qopiusUser;
 
 
-  constructor (public http: Http, public api: Api) {
+  constructor(public http: Http, public api: Api) {
     this.http = http;
     this.api = api;
   }
@@ -24,12 +24,12 @@ export class User {
   //******************************************************************************
   //PUBLIC METHODS****************************************************************
   //******************************************************************************
-  login( account:any) {
-    console.log("login");
+  login(account: any) {
+    console.log("service/login");
 
     let body = {
-      name : account.username,
-      password : account.password
+      name: account.username,
+      password: account.password
     };
     console.log(body);
     let seq = this.api.post('session', body).share();
@@ -39,7 +39,7 @@ export class User {
       .subscribe(res => {
         // If the API returned a successful response, mark the user as logged in
         // Success if user info returned. Else error.
-        if(res.toolkits) {
+        if (res.toolkits) {
           this._loggedIn(res);
         }
         else {

@@ -1,7 +1,7 @@
 import { ToastController, NavController } from 'ionic-angular';
 import { Component } from '@angular/core';
 
-import {HomePage} from '../home/home';
+import { HomePage } from '../home/home';
 
 import { User } from '../../services/user';
 
@@ -10,24 +10,24 @@ import { User } from '../../services/user';
 })
 
 export class AuthenticationPage {
-    account: { username: string, password: string } = {
-        username: 'Cyrille',
-        password: 'xlYlkeRCH4'
-    };
+  account: { username: string, password: string } = {
+    username: 'Cyrille',
+    password: 'xlYlkeRCH4'
+  };
 
-    private loginErrorString: "Login error"
+  private loginErrorString: "Login error"
 
-    constructor(public toastCtrl: ToastController, public nav: NavController , public userService: User ) {
+  constructor(public toastCtrl: ToastController, public nav: NavController, public userService: User) {
 
-    }
+  }
 
-    onPageLoaded(){
-      console.log("pageAuthLoaded");
-    }
+  onPageLoaded() {
+    console.log("pageAuthLoaded");
+  }
 
-    login( event ) {
-        this.userService.login(this.account).subscribe((resp) => {
-        this.nav.push(HomePage);
+  login(event) {
+    this.userService.login(this.account).subscribe((resp) => {
+      this.nav.push(HomePage);
     }, (err) => {
       // Unable to log in
       let toast = this.toastCtrl.create({
@@ -38,8 +38,8 @@ export class AuthenticationPage {
       toast.present();
     });
 
-    }
+  }
 
-    onPageWillLeave() {
-    }
+  onPageWillLeave() {
+  }
 }

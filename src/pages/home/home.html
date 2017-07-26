@@ -8,9 +8,9 @@
 
 <ion-content>
 
-  <ion-card *ngFor="let toolkit of toolkits">
+  <ion-card *ngFor="let toolkit of _toolkits" (click)="openToolkitPage(toolkit)">
 
-    <ion-item>
+    <ion-item id="toolkit">
       <h2>{{toolkit}}</h2>
     </ion-item>
 
