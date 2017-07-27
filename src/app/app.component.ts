@@ -5,6 +5,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 //Load pages
 import { FirstRunPage } from '../pages/pages';
+import { ImageDetailPage } from '../pages/imageDetailPage/imageDetailPage';
 import { CanvasPage } from '../pages/canvas/canvas';
 import { HomePage } from '../pages/home/home';
 import { AuthenticationPage } from '../pages/authentication/authentication';
@@ -21,6 +22,7 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   pages = [
+    {title: 'ImageDetailPage', component: ImageDetailPage},
     {title: 'Canvas', component: CanvasPage},
     {title: 'Home', component: HomePage},
     {title: 'authentication', component: AuthenticationPage}

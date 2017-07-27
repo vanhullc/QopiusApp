@@ -1,23 +1,34 @@
-import { NavController, NavParams } from 'ionic-angular';
+import { ModalController, NavController, NavParams } from 'ionic-angular';
 import { Component } from '@angular/core';
 
 import { User } from '../../services/user';
 import { Image } from '../../services/image';
 
+import { ImageDetailPage } from '../imageDetailPage/imageDetailPage';
+
 @Component({
-    templateUrl: 'canvas.html'
+    templateUrl: 'canvas.html',
+    selector: 'page-canvas'
 })
 
 export class CanvasPage {
     _toolkit: any;
-    constructor(private nav: NavController, private navParam: NavParams, private userService: User, private imageService: Image) {
+    _images: String[];
+
+    constructor(public modalCtrl: ModalController, private nav: NavController, private navParam: NavParams, private userService: User, private imageService: Image) {
+        console.log("canvas.ts/Constructor");
         this._toolkit = this.navParam.get("_toolkit");
-        this.getAnalyseImage(this._toolkit);
+        console.log("toolkit: " + this._toolkit);
+        this._images = this.imageService._images;
+        console.log("image: " + this._images[0]);
     }
 
-    getAnalyseImage(toolkit:any) {
-        this.imageService.getAnalysedImage(toolkit);
+    openPhoto(index: any) {
+        let modal = this.modalCtrl.create(ImageDetailPage, { photo_index: index });
+        modal.present();
     }
+
+    
 
     onPageLoaded() {
 
@@ -25,7 +36,6 @@ export class CanvasPage {
 
     onPageWillEnter() {
         /*to do just before the display of the page*/
-
     }
     onPageDidEnter() { }
     onPageWillLeave() {

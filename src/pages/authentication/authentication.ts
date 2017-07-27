@@ -26,8 +26,9 @@ export class AuthenticationPage {
   }
 
   login(event) {
-    this.userService.login(this.account).subscribe((resp) => {
-      this.nav.push(HomePage);
+    this.userService.login(this.account).subscribe(
+      (resp) => {
+        this.nav.setRoot(HomePage);
     }, (err) => {
       // Unable to log in
       let toast = this.toastCtrl.create({

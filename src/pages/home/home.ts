@@ -1,7 +1,8 @@
-import { NavController } from 'ionic-angular';
+import { ToastController, NavController } from 'ionic-angular';
 import { Component } from '@angular/core';
 
 import { User } from '../../services/user';
+import { Image } from '../../services/image';
 
 import { CanvasPage } from '../canvas/canvas';
 
@@ -11,14 +12,27 @@ import { CanvasPage } from '../canvas/canvas';
 
 export class HomePage {
     _toolkits: any[];
-    constructor(private nav: NavController , private userService: User ) {
+    private getImageErrorString: "get toolkit images error"
+
+    constructor(public toastCtrl: ToastController, private nav: NavController , private userService: User , private imageService: Image) {
         this._toolkits = this.userService._user.toolkits;
     }
 
     openToolkitPage(toolkit:any) {
-        this.nav.push(CanvasPage, {
-            _toolkit: toolkit
-        });
+        this.imageService.getAnalysedImages(toolkit).subscribe(
+            (resp) => {
+                this.nav.push(CanvasPage, {
+                    _toolkit: toolkit
+                });
+            }, (err) => {
+                // Unable to get Images
+                let toast = this.toastCtrl.create({
+                    message: this.getImageErrorString,
+                    duration: 3000,
+                    position: 'top'
+                });
+                toast.present();
+            });
     }
 
     onPageLoaded(){

@@ -14,7 +14,8 @@ import 'rxjs/Rx';
 @Injectable()
 
 export class Image {
-    _image: AnalysedImage[];
+    _analyzedImage: AnalysedImage[];
+    _images: String[];
     locationID: string = "skip";
     missionID: string = "skip";
 
@@ -25,7 +26,7 @@ export class Image {
         this.user = user;
     }
 
-    getAnalysedImage(toolkit: any) {
+    getAnalysedImages(toolkit: any) {
         console.log("service/getAnalysedImage");
 
         let body = {
@@ -46,7 +47,7 @@ export class Image {
                 // If the API returned a successful response, mark the user as logged in
                 // Success if user info returned. Else error.
                 if (!res.body) {
-                    this._saveAnalysedImage(res);
+                    this._saveAnalysedImages(res);
                 }
                 else {
                     console.error("API error when trying to connect", res);
@@ -55,27 +56,28 @@ export class Image {
             }, err => {
                 console.error('ERROR', err);
             });
-
         return seq;
     }
 
-    _saveAnalysedImage(resp) {
+    _saveAnalysedImages(resp) {
         this.initAnalysedImage();
-        for(let i = 0; i < resp.length ; i++) {
-            this._image = resp;
-            console.log("Image " + i + " :");
-            console.log("missionID" + this._image[i].missionID);
-            console.log("image" + this._image[i].image);
-            console.log("jsonName" + this._image[i].jsonName);
-            console.log("json" + this._image[i].json);
-            console.log("imageName" + this._image[i].imageName);
-            console.log("locationID" + this._image[i].locationID);
-            console.log("date" + this._image[i].date);
+        for (let i = 0; i < resp.length; i++) {
+            this._analyzedImage = resp;
+            this._images.push(this._analyzedImage[i].image);
+            //console.log("Image " + i + " :");
+            //console.log("missionID" + this._analyzedImage[i].missionID);
+            //console.log("image" + this._analyzedImage[i].image);
+            //console.log("jsonName" + this._analyzedImage[i].jsonName);
+            //console.log("json" + this._analyzedImage[i].json);
+            //console.log("imageName" + this._analyzedImage[i].imageName);
+            //console.log("locationID" + this._analyzedImage[i].locationID);
+            //console.log("date" + this._analyzedImage[i].date);
         }
     }
 
     initAnalysedImage() {
-        this._image = [{
+        this._images = [];
+        this._analyzedImage = [{
             "missionID": "",
             "image": "",
             "jsonName": "",

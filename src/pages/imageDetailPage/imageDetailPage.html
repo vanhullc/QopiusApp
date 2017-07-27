@@ -1,0 +1,18 @@
+<ion-header no-border>
+  <ion-navbar color="dark">
+    <ion-buttons right>
+	    <button ion-button icon-only (click)="close()">
+	    	<ion-icon name="close"></ion-icon>	
+	    </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content color="dark">
+	<ion-slides pager="true" [initialSlide]="_index">
+		<ion-slide *ngFor="let image of _images">
+			<img [src]="image" class="slider__image"/>
+			<p class="slider__imagecaption">{{ image.caption }}</p>
+		</ion-slide>
+	</ion-slides>
+</ion-content>

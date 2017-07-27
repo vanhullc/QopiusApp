@@ -1,17 +1,15 @@
 <ion-header>
 
-  <ion-navbar *navbar>
+  <ion-navbar color="primary">
     <ion-title>Canvas</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 <ion-content>
-
-  <ion-card>
-
-    <p>Cancas</p>
-
-  </ion-card>
-
+  <div class="image__grid">		
+			<div class="image__square" *ngFor="let image of _images; let i = index" (click)="openPhoto(i)">
+				<img [src]="image" />				
+			</div>			
+		</div>	
 </ion-content>
