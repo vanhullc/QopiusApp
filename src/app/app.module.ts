@@ -6,7 +6,8 @@ import { Storage, IonicStorageModule } from '@ionic/storage';
 
 import { MyApp } from './app.component';
 
-import { ImageDetailPage } from '../pages/imageDetailPage/imageDetailPage';
+import { CameraPage } from '../pages/camera/camera';
+import { ImageDetailPage } from '../pages/imageDetail/imageDetail';
 import { CanvasPage } from '../pages/canvas/canvas';
 import { HomePage } from '../pages/home/home';
 import { AuthenticationPage } from '../pages/authentication/authentication';
@@ -18,6 +19,9 @@ import { Image } from '../services/image';
 
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
+import { Camera } from '@ionic-native/camera';
+import { File } from '@ionic-native/file';
+import { FileTransfer } from '@ionic-native/file-transfer';
 
 export function provideSettings(storage: Storage) {
   /**
@@ -35,6 +39,7 @@ export function provideSettings(storage: Storage) {
 @NgModule({
   declarations: [
     MyApp,
+    CameraPage,
     ImageDetailPage,
     CanvasPage,
     HomePage,
@@ -49,6 +54,7 @@ export function provideSettings(storage: Storage) {
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
+    CameraPage,
     ImageDetailPage,
     CanvasPage,
     AuthenticationPage,
@@ -58,6 +64,9 @@ export function provideSettings(storage: Storage) {
     Api,
     User,
     Image,
+    File,
+    FileTransfer,
+    Camera, 
     StatusBar,
     SplashScreen,
     { provide: Settings, useFactory: provideSettings, deps: [Storage] },

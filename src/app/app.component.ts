@@ -3,9 +3,14 @@ import { Platform, Nav, Config } from 'ionic-angular';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { Camera, CameraOptions } from '@ionic-native/camera';
+import { File } from '@ionic-native/file';
+import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
+
 //Load pages
 import { FirstRunPage } from '../pages/pages';
-import { ImageDetailPage } from '../pages/imageDetailPage/imageDetailPage';
+import { CameraPage } from '../pages/camera/camera';
+import { ImageDetailPage } from '../pages/imageDetail/imageDetail';
 import { CanvasPage } from '../pages/canvas/canvas';
 import { HomePage } from '../pages/home/home';
 import { AuthenticationPage } from '../pages/authentication/authentication';
@@ -22,6 +27,7 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   pages = [
+    {title: 'CameraPage', component: CameraPage},
     {title: 'ImageDetailPage', component: ImageDetailPage},
     {title: 'Canvas', component: CanvasPage},
     {title: 'Home', component: HomePage},

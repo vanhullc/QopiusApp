@@ -8,6 +8,8 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class Api {
   url: string = 'https://apiqube.com/debug';
+  postImageUrl: string = "http://train2.qopius.com:8000/upload";
+
 
   constructor(public http: Http) {
   }
@@ -29,6 +31,11 @@ export class Api {
     }
 
     return this.http.get(this.url + '/' + endpoint, options);
+  }
+
+  //Specific function because of different URL
+  postImage(body: any, options?: RequestOptions) {
+    return this.http.post(this.postImageUrl, body, options);
   }
 
   post(endpoint: string, body: any, options?: RequestOptions) {

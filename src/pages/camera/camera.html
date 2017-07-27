@@ -2,18 +2,18 @@
 
   <ion-navbar color="primary">
     <ion-buttons right>
-	    <button ion-button icon-only (click)="openCamera()">
-	    	<ion-icon name="camera"></ion-icon>	
+	    <button ion-button (click)="savePicture()">
+	    	<p>SAVE</p>	
 	    </button>
     </ion-buttons>
-    <ion-title>Canvas</ion-title>
+    <ion-title>Add Pictures</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 <ion-content>
   <div class="image__grid">		
-			<div class="image__square" *ngFor="let image of _images; let i = index" (click)="openPhoto(i)">
+			<div class="image__square" *ngFor="let image of _images; let i = index">
 				<img [src]="image" />				
 			</div>			
 		</div>	

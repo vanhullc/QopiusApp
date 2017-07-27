@@ -4,7 +4,8 @@ import { Component } from '@angular/core';
 import { User } from '../../services/user';
 import { Image } from '../../services/image';
 
-import { ImageDetailPage } from '../imageDetailPage/imageDetailPage';
+import { ImageDetailPage } from '../imageDetail/imageDetail';
+import { CameraPage } from '../camera/camera';
 
 @Component({
     templateUrl: 'canvas.html',
@@ -28,7 +29,9 @@ export class CanvasPage {
         modal.present();
     }
 
-    
+    openCamera() {
+        this.nav.push(CameraPage);
+    }
 
     onPageLoaded() {
 

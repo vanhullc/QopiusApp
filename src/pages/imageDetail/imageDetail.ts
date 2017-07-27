@@ -4,8 +4,8 @@ import { Component } from '@angular/core';
 import { Image } from '../../services/image';
 
 @Component({
-    templateUrl: 'imageDetailPage.html',
-    selector: 'page-imageDetailPage'
+    templateUrl: 'imageDetail.html',
+    selector: 'page-imageDetail'
 })
 
 export class ImageDetailPage {
