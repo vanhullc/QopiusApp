@@ -2,6 +2,10 @@ import { Injectable } from '@angular/core';
 import { Http, RequestOptions, URLSearchParams } from '@angular/http';
 import 'rxjs/add/operator/map';
 
+import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
+import { File } from '@ionic-native/file';
+
+
 /**
  * Api is a generic REST Api handler. Set your API url first.
  */
@@ -9,10 +13,13 @@ import 'rxjs/add/operator/map';
 export class Api {
   url: string = 'https://apiqube.com/debug';
   postImageUrl: string = "http://train2.qopius.com:8000/upload";
+  fileTransfer: FileTransferObject = this.transfer.create();
 
 
-  constructor(public http: Http) {
+  constructor(public http: Http, private transfer: FileTransfer, private file: File) {
   }
+
+  
 
   get(endpoint: string, params?: any, options?: RequestOptions) {
     if (!options) {
@@ -34,8 +41,8 @@ export class Api {
   }
 
   //Specific function because of different URL
-  postImage(body: any, options?: RequestOptions) {
-    return this.http.post(this.postImageUrl, body, options);
+  postImage(body: any) {
+    return this.fileTransfer.upload(this.postImageUrl, "../assets/zip/ExampleImage.zip", body);
   }
 
   post(endpoint: string, body: any, options?: RequestOptions) {

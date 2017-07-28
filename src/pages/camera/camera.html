@@ -1,20 +1,33 @@
 <ion-header>
 
-  <ion-navbar color="primary">
-    <ion-buttons right>
-	    <button ion-button (click)="savePicture()">
+	<ion-navbar color="primary">
+		<ion-buttons right>
+			<button ion-button (click)="savePicture()">
 	    	<p>SAVE</p>	
 	    </button>
-    </ion-buttons>
-    <ion-title>Add Pictures</ion-title>
-  </ion-navbar>
+		</ion-buttons>
+		<ion-title>Add Pictures</ion-title>
+	</ion-navbar>
 
 </ion-header>
 
 <ion-content>
-  <div class="image__grid">		
-			<div class="image__square" *ngFor="let image of _images; let i = index">
+	<div class="image__grid" id="grid">
+		<div class="image__square" *ngFor="let image of _images">
 				<img [src]="image" />				
-			</div>			
 		</div>	
+	</div>
+	<ion-fab right bottom>
+		<button ion-fab color="danger" icon-only>
+			<ion-icon name="add"></ion-icon>
+		</button>
+		<ion-fab-list side="top">
+      <button ion-fab color="danger" icon-only (click)="getCameraPicture()">
+				<ion-icon name="camera"></ion-icon>
+			</button>
+      <button ion-fab color="danger" icon-only (click)="getLibraryPicture()">
+				<ion-icon name="image"></ion-icon>
+			</button>
+    </ion-fab-list>
+	</ion-fab>
 </ion-content>

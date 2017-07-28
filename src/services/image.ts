@@ -95,37 +95,38 @@ export class Image {
         return seq;
     }
 
-    uploadImage(zipFile: any) {
+    uploadImage(zipFile: File) {
         console.log("service/uploadImage");
 
         let body = {
-            accountID: this.user._user.accountID,
-            session_password: this.user._user.session_password,
-            toolkitID: this._toolkit,
-            taskID: this._taskID,
-            mode: "zip",
-            file: zipFile
+            params: {
+                accountID: this.user._user.accountID,
+                session_password: this.user._user.session_password,
+                toolkitID: this._toolkit,
+                taskID: this._taskID,
+                mode: "zip",
+                file: zipFile
+            }
         }
 
         console.log(body);
 
-        let seq = this.api.postImage(body).share();
-
-        seq
-            .map(res => res.json())
-            .subscribe(res => {
+        let seq = this.api.postImage(body).then(
+            (res) => {
                 // If the API returned a successful response, mark the user as logged in
                 // Success if user info returned. Else error.
-                if (res.message === "zipFile uploaded") {
+                if (res) {
                     console.log("Zip Uploaded");
+                    console.log(res);
                 }
                 else {
                     console.error("API error when trying to connect", res);
                 }
 
-            }, err => {
+            }, (err) => {
                 console.error('ERROR', err);
             });
+
         return seq;
     }
 

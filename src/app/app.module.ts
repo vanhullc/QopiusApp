@@ -13,6 +13,7 @@ import { HomePage } from '../pages/home/home';
 import { AuthenticationPage } from '../pages/authentication/authentication';
 
 import { Api } from '../services/api';
+import { FileService } from '../services/file';
 import { User } from '../services/user';
 import { Settings } from '../services/settings';
 import { Image } from '../services/image';
@@ -64,6 +65,7 @@ export function provideSettings(storage: Storage) {
     Api,
     User,
     Image,
+    FileService,
     File,
     FileTransfer,
     Camera, 
