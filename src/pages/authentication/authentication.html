@@ -1,11 +1,16 @@
 <ion-header>
 
   <ion-navbar color="primary">
-    <ion-title>Login</ion-title>
+    <ion-title center>Login</ion-title>
   </ion-navbar>
 
 </ion-header>
+<!-- 
 
+    This form is linked to the variable account in the Authentication.ts file : [(ngModel)]
+    This is the variable that put by default value.
+
+ -->
 <ion-content id="authentificationContent" padding>
     <p id="loginTitle">Qopius v.0.1</p>
     <form (ngSubmit)="login()">

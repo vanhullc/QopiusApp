@@ -11,21 +11,29 @@
 
 </ion-header>
 
+<!-- The image grid is dynamic. When the user take a pic or choose a pic from his library then a new pic is add
+	 This is done by linking the div with _images by using *ngFor
+	 -->
+
 <ion-content>
 	<div class="image__grid" id="grid">
 		<div class="image__square" *ngFor="let image of _images">
 				<img [src]="image" />				
 		</div>	
 	</div>
+
+<!-- The fab button are used to add a pic from the camera or the library
+	 -->
+ 
 	<ion-fab right bottom>
 		<button ion-fab color="danger" icon-only>
 			<ion-icon name="add"></ion-icon>
 		</button>
 		<ion-fab-list side="top">
-      <button ion-fab color="danger" icon-only (click)="getCameraPicture()">
+      		<button ion-fab color="danger" icon-only (click)="getCameraPicture()">
 				<ion-icon name="camera"></ion-icon>
 			</button>
-      <button ion-fab color="danger" icon-only (click)="getLibraryPicture()">
+      		<button ion-fab color="danger" icon-only (click)="getLibraryPicture()">
 				<ion-icon name="image"></ion-icon>
 			</button>
     </ion-fab-list>

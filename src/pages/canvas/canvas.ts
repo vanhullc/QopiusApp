@@ -1,7 +1,6 @@
-import { ModalController, NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, MenuController } from 'ionic-angular';
 import { Component } from '@angular/core';
 
-import { User } from '../../services/user';
 import { Image } from '../../services/image';
 
 import { ImageDetailPage } from '../imageDetail/imageDetail';
@@ -12,43 +11,41 @@ import { CameraPage } from '../camera/camera';
     selector: 'page-canvas'
 })
 
+/* 
+   This page is used to show the pics stored in the server.
+*/
+
 export class CanvasPage {
     _toolkit: any;
     _images: String[];
+    _boxesJSon: any;
 
-    constructor(public modalCtrl: ModalController, private nav: NavController, private navParam: NavParams, private userService: User, private imageService: Image) {
+    constructor(private menu: MenuController, private nav: NavController, private navParam: NavParams, private imageService: Image) {
         console.log("canvas.ts/Constructor");
-        this._toolkit = this.navParam.get("_toolkit");
+        this._toolkit = "y6W4gm";
         console.log("toolkit: " + this._toolkit);
-        this._images = this.imageService._images;
-        console.log("image: " + this._images[0]);
+        this.imageService.getAnalysedImages(this._toolkit).subscribe(
+            ()=> {
+                this._images = this.imageService._images;
+            }
+        );
     }
+
+    // Open a zoom that allow the user to see the picture correctly. 
 
     openPhoto(index: any) {
-        let modal = this.modalCtrl.create(ImageDetailPage, { photo_index: index });
-        modal.present();
+        console.log("imageDetail/initializeBoxes/urlBoxes : "+ this._images[index]);
+        this.nav.push(ImageDetailPage, {photo_index: index, boxesJSon: this._boxesJSon});
     }
+
+    // Open the cameraPage to add new pics to the toolkit
 
     openCamera() {
         this.nav.push(CameraPage);
     }
 
-    onPageLoaded() {
-
-    }
-
-    onPageWillEnter() {
-        /*to do just before the display of the page*/
-    }
-    onPageDidEnter() { }
-    onPageWillLeave() {
-        /*to do just before the page is leaved*/
-    }
-    onPageDidLeave() { }
-    onPageWillUnload() { }
-    onPageDidUnload() { }
-
-    disconnect() {
-
+    toggleMenu() {
+        console.log("home/toggleMenu");
+        this.menu.toggle();
     }
 }

@@ -1,9 +1,7 @@
-import { ToastController, NavController } from 'ionic-angular';
+import { ToastController, AlertController, NavController } from 'ionic-angular';
 import { Component } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 
 import { Camera, CameraOptions } from '@ionic-native/camera';
-import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
 import { File } from '@ionic-native/file';
 
 import { Image } from '../../services/image';
@@ -15,77 +13,95 @@ import JSzip from 'jszip';
   selector: 'page-camera'
 })
 
+/* 
+   This page is used to add new pics, zip this pics and upload the zip file to the server.
+*/
+
 export class CameraPage {
-
+  // selected toolkit number
   _toolkit: any;
+  // array of new pics by the user
   _images: any[] = [];
+  // file path of the new zip
   _zip: any;
-  htmlToAdd: any = "";
-
+  // file path of the cache directory of the phone. Allow to write file on both iOS and Android
+  _cacheDirectory: any;
   options: CameraOptions;
 
-  constructor(private sanitizer: DomSanitizer, private nav: NavController, private toast: ToastController, private camera: Camera, private imageService: Image, private file: File) {
+  constructor(private nav: NavController, private alert: AlertController, private file: File, private toast: ToastController, private camera: Camera, private imageService: Image) {
+    this._cacheDirectory = this.file.cacheDirectory;
   }
+
+  /*
+    SavePicture first create the zip and save it in the cache directory.
+    Then it call multiple imageService function to upload the zip : 
+    GetTask => PostTask => UploadImage
+    Present a toast whenever it's done or not working
+  */
 
   savePicture() {
-    this.zipPics(this._images);
-    this.imageService.getTask().subscribe(
-      (resp) => {
-        this.imageService.postTask().subscribe(
+    this.zipPics(this._images).then(
+      (content) => {
+
+        this.file.createFile(this._cacheDirectory, "Images.zip", true).then(
+          (res) => {
+            console.log("zip file created");
+          }), console.error("ERROR: zip file not created");
+        this._zip = this._cacheDirectory + "Images.zip";
+
+        this.imageService.getTask().subscribe(
           (resp) => {
-            this.imageService.uploadImage(this._zip).then(
+            this.imageService.postTask().subscribe(
               (resp) => {
-                console.log("UploadImageDone");
-                let toast = this.toast.create({
-                  message: 'UploadImageDone',
-                  duration: 3000,
-                  position: 'top'
-                });
-                toast.present();
-                this.nav.pop();
+                this.imageService.uploadImage(this._zip).then(
+                  (resp) => {
+                    console.log("UploadImageDone");
+                    let toast = this.toast.create({
+                      message: 'UploadImageDone: ' + JSON.stringify(resp),
+                      duration: 3000,
+                      position: 'top'
+                    });
+                    toast.present();
+                    this.nav.pop();
+                  }, (err) => {
+                    console.error("camera/uploadImageError Code: " + err.code + " & source: " + err.source + " & target: " + err.target);
+                    let alert = this.alert.create({
+                      message: 'camera/uploadImageError: ' + JSON.stringify(err)
+                    });
+                    alert.present();
+                    this.nav.pop();
+                  });
               }, (err) => {
-                console.error("camera/uploadImageError: " + err);
+                console.error("camera/postTaskError: " + JSON.stringify(err));
                 let toast = this.toast.create({
-                  message: 'camera/uploadImageError',
-                  duration: 3000,
+                  message: 'camera/postTaskError',
+                  duration: 10000,
                   position: 'top'
                 });
                 toast.present();
                 this.nav.pop();
-              }
-            );
+              });
           }, (err) => {
-            console.error("camera/postTaskError: " + err);
+            console.error("camera/getTaskError: " + JSON.stringify(err));
             let toast = this.toast.create({
-                  message: 'camera/postTaskError',
-                  duration: 3000,
-                  position: 'top'
-                });
-                toast.present();
+              message: 'camera/getTaskError',
+              duration: 10000,
+              position: 'top'
+            });
+            toast.present();
             this.nav.pop();
-          }
-        );
-      }, (err) => {
-        console.error("camera/getTaskError: " + err);
-        let toast = this.toast.create({
-                  message: 'camera/getTaskError',
-                  duration: 3000,
-                  position: 'top'
-                });
-        toast.present();
-        this.nav.pop();
-      }
-    );
+          });
+      });
   }
-
-  zipPics(files: any[]){
+  // Generate the zip file and return it to be written somewhere
+  zipPics(files: any[]) {
     let zip = new JSzip();
-    for(let i = 0; i < files.length; i++) {
-        zip.file(files[i]);   
+    for (let i = 0; i < files.length; i++) {
+      zip.file(files[i]);
     }
-    this._zip = zip.generateAsync({type:"uint8array"});
+    return zip.generateAsync({ "type": "blob" });
   }
-
+  // Change camera options to add pic from library
   getLibraryPicture() {
     this.options = {
       quality: 100,
@@ -96,7 +112,7 @@ export class CameraPage {
     }
     this.getPicture();
   }
-
+  // Change camera options to add pic from camera
   getCameraPicture() {
     this.options = {
       quality: 100,
@@ -108,27 +124,22 @@ export class CameraPage {
     this.getPicture();
   }
 
-
+  // Get pic depending on the options selected. Create a toast if error 
   getPicture() {
     this.camera.getPicture(this.options).then(
       (imageData) => {
-        //this.htmlToAdd += "<div class=\"image__square\"\><img [src]=\""+ imageData +"\" /\></div\>";
         this._images.push(imageData);
-       let toast = this.toast.create({
-          message: "new pic success",
-          duration: 3000,
-          position: 'top'
-        });
-        toast.present();
-    }, (err) => {
-      // Handle error
-      console.log(this._images);
+        console.log("image pushed");
+      }, (err) => {
+        // Handle error
+        //this._images.push("http://www.daimto.com/wp-content/uploads/2014/08/errorstop.png");
+        console.log(this._images);
         let toast = this.toast.create({
           message: err,
           duration: 3000,
           position: 'top'
         });
         toast.present();
-    });
+      });
   }
 }

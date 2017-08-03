@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-navbar color="primary">
+	    <button ion-button (click)="toggleMenu()" >
+        <ion-icon name="menu"></ion-icon>
+	    </button>
+    <ion-title center>Qopius</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content>
+  <ion-card>
+      <ion-card-header>
+        Bar Chart
+      </ion-card-header>
+      <ion-card-content>
+        <canvas baseChart [datasets]="chartData" [labels]="chartLabels" [options]="chartOptions" [legend]="chartLegend"
+    [chartType]="chartType"></canvas>
+      </ion-card-content>
+    </ion-card>
+</ion-content>

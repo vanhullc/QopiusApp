@@ -1,20 +1,22 @@
 <ion-header>
-
-  <ion-navbar color="primary">
-    <ion-buttons right>
-	    <button ion-button icon-only (click)="openCamera()">
-	    	<ion-icon name="camera"></ion-icon>	
+	<ion-navbar color="primary">
+		<button ion-button (click)="toggleMenu()">
+        <ion-icon name="menu"></ion-icon>
 	    </button>
-    </ion-buttons>
-    <ion-title>Canvas</ion-title>
-  </ion-navbar>
+		<ion-title center>Qopius</ion-title>
+		<ion-buttons right>
+			<button ion-button icon-only (click)="openCamera()">
+				<ion-icon name="camera"></ion-icon>	
+			</button>
+		</ion-buttons>
+	</ion-navbar>
 
 </ion-header>
 
 <ion-content>
-  <div class="image__grid">		
-			<div class="image__square" *ngFor="let image of _images; let i = index" (click)="openPhoto(i)">
-				<img [src]="image" />				
-			</div>			
-		</div>	
+	<div class="image__grid">
+		<div class="image__square" *ngFor="let image of _images; let i = index" (click)="openPhoto(i)">
+			<img [src]="image" />
+		</div>
+	</div>
 </ion-content>

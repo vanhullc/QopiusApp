@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 
 import { AnalysedImage } from '../models/analysedImage';
+import { Box } from '../models/qopiusBox';
+
+import { FileUploadResult } from '@ionic-native/file-transfer';
 
 import { Api } from '../services/api';
 import { User } from '../services/user';
@@ -30,7 +32,9 @@ export class Image {
         this.user = user;
     }
 
-    getTask() {
+    
+
+    getTask() {// Get taskID. Used to post image for example
         console.log("service/getTask");
 
         let body = {
@@ -61,7 +65,8 @@ export class Image {
         return seq;
     }
 
-    postTask() {
+
+    postTask() {// post taskID. Used after getTask to post image for example
         console.log("service/postTask");
 
         let body = {
@@ -95,27 +100,25 @@ export class Image {
         return seq;
     }
 
-    uploadImage(zipFile: File) {
+    
+
+    uploadImage(zipFile: String) {// Prepare all the request parameter for the api/postImage function. Return the promise to the camera page to handle the response. 
         console.log("service/uploadImage");
 
         let body = {
-            params: {
-                accountID: this.user._user.accountID,
-                session_password: this.user._user.session_password,
-                toolkitID: this._toolkit,
-                taskID: this._taskID,
-                mode: "zip",
-                file: zipFile
-            }
-        }
+            accountID: this.user._user.accountID,
+            session_password: this.user._user.session_password,
+            toolkitID: this._toolkit,
+            taskID: this._taskID,
+            mode: "zip",
+            file: zipFile
+        };
 
         console.log(body);
 
-        let seq = this.api.postImage(body).then(
+        let seq: Promise<FileUploadResult> = this.api.postImage(body);/*.then(
             (res) => {
-                // If the API returned a successful response, mark the user as logged in
-                // Success if user info returned. Else error.
-                if (res) {
+                if (res.responseCode) {
                     console.log("Zip Uploaded");
                     console.log(res);
                 }
@@ -125,12 +128,12 @@ export class Image {
 
             }, (err) => {
                 console.error('ERROR', err);
-            });
+            });*/
 
         return seq;
     }
 
-    getTaskStatus() {
+    getTaskStatus() {// Get taskStatus. Not used RN
         console.log("service/getTaskStatus");
 
         let body = {
@@ -162,7 +165,7 @@ export class Image {
         return seq;
     }
 
-    getAnalysedImages(toolkit: any) {
+    getAnalysedImages(toolkit: any) {// Get analysed image linked to the toolkit. Allow to get pics and boxes. Save this pics
         console.log("service/getAnalysedImage");
         this._toolkit = toolkit;
 
@@ -200,23 +203,30 @@ export class Image {
         this._taskID = resp.taskID.id;
     }
 
-    saveAnalysedImages(resp) {
+    saveAnalysedImages(resp) {// Save analysedImage in _analyzedImage and all the images link in _images
+        console.log("service/saveAnalysedImage");
         this.initAnalysedImage();
         for (let i = 0; i < resp.length; i++) {
             this._analyzedImage = resp;
             this._images.push(this._analyzedImage[i].image);
-            //console.log("Image " + i + " :");
-            //console.log("missionID" + this._analyzedImage[i].missionID);
-            //console.log("image" + this._analyzedImage[i].image);
-            //console.log("jsonName" + this._analyzedImage[i].jsonName);
-            //console.log("json" + this._analyzedImage[i].json);
-            //console.log("imageName" + this._analyzedImage[i].imageName);
-            //console.log("locationID" + this._analyzedImage[i].locationID);
-            //console.log("date" + this._analyzedImage[i].date);
+            this.getBoxes(i);
         }
     }
 
-    initAnalysedImage() {
+    getBoxes(index:any) {
+        console.log("service/getBoxes");
+        this.api.getUrl(this._analyzedImage[index].json.toString())
+        .map(res => res.json())
+        .subscribe(
+            res => {
+                this._analyzedImage[index].boxes = res.results;
+            }, err => {
+                console.error("ERROR"+JSON.stringify(err));
+            }
+        );
+    }
+
+    initAnalysedImage() {// Default position of _images and _analyzedImages
         this._images = [];
         this._analyzedImage = [{
             "missionID": "",
@@ -225,7 +235,8 @@ export class Image {
             "json": "",
             "imageName": "",
             "locationID": "",
-            "date": ""
+            "date": "",
+            "boxes": []
         }];
     }
 }

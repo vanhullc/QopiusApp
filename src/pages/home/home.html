@@ -1,19 +1,46 @@
 <ion-header>
-
   <ion-navbar color="primary">
-    <ion-title>Home</ion-title>
+    <button ion-button (click)="toggleMenu()">
+        <ion-icon name="menu"></ion-icon>
+	  </button>
+    <ion-title center (click)="initialiseRequest()">Qopius</ion-title>
+    <ion-buttons right>
+      <button ion-button (click)="switchArchiveMode()">
+          <ion-icon name="archive"></ion-icon>
+      </button>
+    </ion-buttons>
+    
   </ion-navbar>
 
 </ion-header>
 
 <ion-content>
+  <ion-card>
 
-  <ion-card *ngFor="let toolkit of _toolkits" (click)="openToolkitPage(toolkit)">
+    <ion-item>
+      <p center>You got <ion-badge center item-end>{{requestNumber}}</ion-badge> request{{mode}}</p>
+    </ion-item>
 
-    <ion-item id="toolkit">
-      <h2>{{toolkit}}</h2>
+  </ion-card>
+  
+  <ion-card *ngFor="let request of requests" (click)="openRequest(request)">
+
+    <ion-item id="request">
+      <h2>{{request.product}}</h2>
+      <h3>{{request.category}}</h3>
+      <p>{{request.date.getDate()}}/{{request.date.getMonth()+1}}/{{request.date.getFullYear()}} : {{request.type}}</p>
     </ion-item>
 
   </ion-card>
 
 </ion-content>
+
+<ion-footer>
+  <ion-scroll style="white-space: nowrap; height: 50px" scrollX="true">
+    <ion-segment style="width: 200%;">
+      <button *ngFor="let tag of tags" ion-button (click)="filterRequest(tag)">
+            <h4>{{tag}}</h4>
+        </button>
+    </ion-segment>
+  </ion-scroll>
+</ion-footer>

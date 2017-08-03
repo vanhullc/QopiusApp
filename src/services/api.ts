@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, RequestOptions, URLSearchParams } from '@angular/http';
 import 'rxjs/add/operator/map';
 
-import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
-import { File } from '@ionic-native/file';
+import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer';
 
 
 /**
@@ -16,10 +15,8 @@ export class Api {
   fileTransfer: FileTransferObject = this.transfer.create();
 
 
-  constructor(public http: Http, private transfer: FileTransfer, private file: File) {
+  constructor(public http: Http, private transfer: FileTransfer) {
   }
-
-  
 
   get(endpoint: string, params?: any, options?: RequestOptions) {
     if (!options) {
@@ -40,9 +37,28 @@ export class Api {
     return this.http.get(this.url + '/' + endpoint, options);
   }
 
-  //Specific function because of different URL
+  // Get without 'https://apiqube.com/debug' URL
+
+  getUrl(endpoint: string) {
+    return this.http.get(endpoint);
+  }
+
+  //Specific function because of different URL and function usage.
+
   postImage(body: any) {
-    return this.fileTransfer.upload(this.postImageUrl, "../assets/zip/ExampleImage.zip", body);
+
+    let options: any;
+    
+    options.params = {};
+    options.params.accountID = body.accountID;
+    options.params.session_password = body.session_password;
+    options.params.toolkitID = body._toolkit;
+    options.params.taskID = body._taskID;
+    options.params.mode = body.mode;
+    options.params.file = body.file;
+
+    console.log("api/postImage");
+    return this.fileTransfer.upload(body.file, this.postImageUrl, options, true);
   }
 
   post(endpoint: string, body: any, options?: RequestOptions) {

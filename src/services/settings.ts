@@ -32,7 +32,7 @@ export class Settings {
       }
     });
   }
-
+  
   _mergeDefaults(defaults: any) {
     for (let k in defaults) {
       if (!(k in this.settings)) {

@@ -1,14 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
-import { Platform, Nav, Config } from 'ionic-angular';
+import { Platform, Nav } from 'ionic-angular';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { Camera, CameraOptions } from '@ionic-native/camera';
-import { File } from '@ionic-native/file';
-import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
 
 //Load pages
 import { FirstRunPage } from '../pages/pages';
+import { RequestDetailPage } from '../pages/requestDetail/requestDetail';
+import { StatistiquePage } from '../pages/statistique/statistique';
 import { CameraPage } from '../pages/camera/camera';
 import { ImageDetailPage } from '../pages/imageDetail/imageDetail';
 import { CanvasPage } from '../pages/canvas/canvas';
@@ -26,15 +25,23 @@ export class MyApp {
 
   @ViewChild(Nav) nav: Nav;
 
+  tabs = [
+    {title: 'Home', component: HomePage},
+    {title: 'Statistique', component: StatistiquePage},
+    {title: 'Canvas', component: CanvasPage}
+  ]
+
   pages = [
-    {title: 'CameraPage', component: CameraPage},
-    {title: 'ImageDetailPage', component: ImageDetailPage},
+    {title: 'RequestDetailPage', component: RequestDetailPage},
+    {title: 'Statistique', component: StatistiquePage},
+    {title: 'Camera', component: CameraPage},
+    {title: 'ImageDetail', component: ImageDetailPage},
     {title: 'Canvas', component: CanvasPage},
     {title: 'Home', component: HomePage},
-    {title: 'authentication', component: AuthenticationPage}
+    {title: 'Authentication', component: AuthenticationPage}
   ];
 
-  constructor(private platform: Platform, settings: Settings, private config: Config, private statusBar: StatusBar, private splashScreen: SplashScreen) {
+  constructor(private platform: Platform, settings: Settings, private statusBar: StatusBar, private splashScreen: SplashScreen) {
   }
 
   ionViewDidLoad() {
