@@ -1,5 +1,6 @@
 import { AuthenticationPage } from './authentication/authentication';
 import { StatistiquePage } from './statistique/statistique';
+import { CameraPage } from './camera/camera';
 import { CanvasPage } from './canvas/canvas';
 // import home in case of server auth problem
 import { HomePage } from './home/home';
@@ -14,3 +15,4 @@ export const FirstRunPage = AuthenticationPage;
 // The initial root pages for our tabs (remove if not using tabs)
 export const Tab1Root = StatistiquePage;
 export const Tab2Root = CanvasPage;
+export const Tab3Root = CameraPage;

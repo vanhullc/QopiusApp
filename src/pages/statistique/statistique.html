@@ -8,39 +8,44 @@
 
 </ion-header>
 
-<ion-content>
+<ion-content class="dashboard-container">
   <ion-grid>
     <ion-row>
       <ion-col col-6>
         <h5>Out of stock</h5>
-        <canvas baseChart [datasets]="chartData" [labels]="chartLabels" [options]="chartOptions" [legend]="chartLegend" [chartType]="chartType"></canvas>
+        <canvas baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels" [chartType]="doughnutChartType" [options]="doughnutChartOptions"
+                        [colors]="doughnutChartColors" (chartClick)="openReportPage()"></canvas>
       </ion-col>
       <ion-col col-6>
         <h5>Plano Comp</h5>
-        <canvas baseChart [datasets]="chartData" [labels]="chartLabels" [options]="chartOptions" [legend]="chartLegend" [chartType]="chartType"></canvas>
-      </ion-col>
+        <canvas baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels" [chartType]="doughnutChartType" [options]="doughnutChartOptions"
+                            [colors]="doughnutChartColors"></canvas>
+        </ion-col>
     </ion-row>
     <ion-row>
       <ion-col col-6>
         <h5>Share of shelf</h5>
-        <canvas baseChart [datasets]="chartData" [labels]="chartLabels" [options]="chartOptions" [legend]="chartLegend" [chartType]="chartType"></canvas>
+        <canvas baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels" [chartType]="doughnutChartType" [options]="doughnutChartOptions"
+                                [colors]="doughnutChartColors"></canvas>
       </ion-col>
       <ion-col col-6>
         <h5>Price Comp</h5>
-        <canvas baseChart [datasets]="chartData" [labels]="chartLabels" [options]="chartOptions" [legend]="chartLegend" [chartType]="chartType"></canvas>
       </ion-col>
     </ion-row>
     <ion-row>
         <h5>Out of stock rank</h5>
-        <canvas baseChart [datasets]="chartBarData" [labels]="chartBarLabels" [options]="chartBarOptions" [legend]="chartBarLegend" [chartType]="chartBarType"></canvas>
+        <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend"
+                            [chartType]="barChartType" [colors]="barChartColors"></canvas>
     </ion-row>
     <ion-row>
         <h5>Compliance rank</h5>
-        <canvas baseChart [datasets]="chartBarData" [labels]="chartBarLabels" [options]="chartBarOptions" [legend]="chartBarLegend" [chartType]="chartBarType"></canvas>
+        <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend"
+                            [chartType]="barChartType" [colors]="barChartColors"></canvas>
     </ion-row>
       <ion-row>
         <h5>Share of shelf rank</h5>
-        <canvas baseChart [datasets]="chartBar2Data" [labels]="chartBar2Labels" [options]="chartBar2Options" [legend]="chartBar2Legend" [chartType]="chartBar2Type"></canvas>
+        <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend"
+                            [chartType]="barChartType" [colors]="barChartColors"></canvas>
     </ion-row>
   </ion-grid>
 </ion-content>

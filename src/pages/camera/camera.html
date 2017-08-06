@@ -1,12 +1,15 @@
 <ion-header>
 
 	<ion-navbar color="primary">
+		<button ion-button (click)="toggleMenu()">
+        <ion-icon name="menu"></ion-icon>
+	  </button>
 		<ion-buttons right>
 			<button ion-button (click)="savePicture()">
 	    	<p>SAVE</p>	
 	    </button>
 		</ion-buttons>
-		<ion-title>Add Pictures</ion-title>
+		<ion-title>Qopius</ion-title>
 	</ion-navbar>
 
 </ion-header>
@@ -18,24 +21,24 @@
 <ion-content>
 	<div class="image__grid" id="grid">
 		<div class="image__square" *ngFor="let image of _images">
-				<img [src]="image" />				
-		</div>	
+			<img [src]="image" />
+		</div>
 	</div>
 
-<!-- The fab button are used to add a pic from the camera or the library
+	<!-- The fab button are used to add a pic from the camera or the library
 	 -->
- 
+
 	<ion-fab right bottom>
 		<button ion-fab color="danger" icon-only>
 			<ion-icon name="add"></ion-icon>
 		</button>
 		<ion-fab-list side="top">
-      		<button ion-fab color="danger" icon-only (click)="getCameraPicture()">
+			<button ion-fab color="danger" icon-only (click)="getCameraPicture()">
 				<ion-icon name="camera"></ion-icon>
 			</button>
-      		<button ion-fab color="danger" icon-only (click)="getLibraryPicture()">
+			<button ion-fab color="danger" icon-only (click)="getLibraryPicture()">
 				<ion-icon name="image"></ion-icon>
 			</button>
-    </ion-fab-list>
+		</ion-fab-list>
 	</ion-fab>
 </ion-content>

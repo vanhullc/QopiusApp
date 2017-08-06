@@ -6,6 +6,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 //Load pages
 import { FirstRunPage } from '../pages/pages';
+import { ReportPage } from '../pages/report/report';
 import { RequestDetailPage } from '../pages/requestDetail/requestDetail';
 import { StatistiquePage } from '../pages/statistique/statistique';
 import { CameraPage } from '../pages/camera/camera';
@@ -28,11 +29,13 @@ export class MyApp {
   tabs = [
     {title: 'Home', component: HomePage},
     {title: 'Statistique', component: StatistiquePage},
-    {title: 'Canvas', component: CanvasPage}
+    {title: 'Canvas', component: CanvasPage},
+    {title: 'Camera', component: CameraPage}
   ]
 
   pages = [
-    {title: 'RequestDetailPage', component: RequestDetailPage},
+    {title: 'RequestDetail', component: RequestDetailPage},
+    {title: 'Report', component: ReportPage},
     {title: 'Statistique', component: StatistiquePage},
     {title: 'Camera', component: CameraPage},
     {title: 'ImageDetail', component: ImageDetailPage},

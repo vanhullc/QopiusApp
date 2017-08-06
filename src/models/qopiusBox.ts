@@ -9,7 +9,7 @@ export class Box {
   y2: number;
   candidates: Product[] = [];
   selectedCandidate: number;
-  active: boolean = false;
+  active: boolean = true;
   constructor(result) {
     this.x1 = result.x1;
     this.y1 = result.y1;

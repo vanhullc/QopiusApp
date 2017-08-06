@@ -1,5 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { MenuController } from 'ionic-angular';
+import { MenuController, NavController } from 'ionic-angular';
+
+import { ReportPage } from '../report/report';
 
 import Chart from 'chart.js';
 
@@ -9,46 +11,46 @@ import Chart from 'chart.js';
 
 export class StatistiquePage {
 
-    chartOptions: any = {
+    public doughnutChartLabels: string[] = ['Out of stock', 'In stock'];
+    public doughnutChartData: number[] = [90, 10];
+    public doughnutChartType: string = 'doughnut';
+    public doughnutChartOptions: any = {
+        cutoutPercentage: 85,
+        legend: {
+            display: false
+        }
+    };
+    public doughnutChartColors: any = [{
+        backgroundColor: '#CE0350',
+    },
+    {
+        backgroundColor: '#DBDBDB',
+    }
+    ];
+
+    public barChartOptions: any = {
         scaleShowVerticalLines: false,
-        responsive: true
+        responsive: true,
+        legend: {
+            display: false
+        }
     };
-    
-    chartLabels: string[] = ['Out of stock'];
-    chartType: string = 'doughnut';
-    chartLegend: boolean = false;
-    
-    chartData: any[] = [
-        { data: [8, 92], label: 'target <5%' },
+    public barChartLabels: string[] = ['City 11e', 'Market 20e', 'Express 19e', 'City Voltaire', 'Super cling', 'Express 16e'];
+    public barChartType: string = 'horizontalBar';
+    public barChartLegend: boolean = true;
+
+    public barChartData: any[] = [
+        { data: [65, 59, 80, 81, 56, 55], label: 'Out of stock ranking' }
+    ];
+    public barChartColors: any = [{
+        backgroundColor: '#CE0350',
+    },
+    {
+        backgroundColor: '#DBDBDB',
+    }
     ];
 
-    chartBarOptions: any = {
-        borderSkipped: 'left',
-        responsive: true
-    };
-    
-    chartBarLabels: string[] = ['City 11e', 'Market 20e', 'Express 19e', 'City Voltaire', 'Super ding', 'Express 16e'];
-    chartBarType: string = 'horizontalBar';
-    chartBarLegend: boolean = false;
-    
-    chartBarData: any[] = [
-        { data: [8, 10, 11, 14, 15, 17]},
-    ];
-
-    chartBar2Options: any = {
-        borderSkipped: 'left',
-        responsive: true
-    };
-    
-    chartBar2Labels: string[] = ['City 11e', 'Market 20e', 'Express 19e', 'City Voltaire', 'Super ding', 'Express 16e'];
-    chartBar2Type: string = 'bar';
-    chartBar2Legend: boolean = false;
-    
-    chartBar2Data: any[] = [
-        { data: [8, 10, 11, 14, 15, 17]},
-    ];
-
-    constructor(private menu: MenuController) {
+    constructor(private menu: MenuController, private nav: NavController) {
         this.menu.enable(true);
         this.initialise();
     }
@@ -60,5 +62,9 @@ export class StatistiquePage {
     toggleMenu() {
         console.log("home/toggleMenu");
         this.menu.toggle();
+    }
+
+    openReportPage() {
+        this.nav.push(ReportPage);
     }
 }

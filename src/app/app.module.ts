@@ -7,6 +7,7 @@ import { Storage, IonicStorageModule } from '@ionic/storage';
 import { MyApp } from './app.component';
 
 import { RequestDetailPage } from '../pages/requestDetail/requestDetail';
+import { ReportPage } from '../pages/report/report';
 import { StatistiquePage } from '../pages/statistique/statistique';
 import { CameraPage } from '../pages/camera/camera';
 import { ImageDetailPage } from '../pages/imageDetail/imageDetail';
@@ -45,6 +46,7 @@ export function provideSettings(storage: Storage) {
 @NgModule({
   declarations: [
     MyApp,
+    ReportPage,
     RequestDetailPage,
     StatistiquePage,
     CameraPage,
@@ -63,6 +65,7 @@ export function provideSettings(storage: Storage) {
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
+    ReportPage,
     RequestDetailPage,
     StatistiquePage,
     CameraPage,

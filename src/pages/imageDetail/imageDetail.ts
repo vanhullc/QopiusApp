@@ -1,8 +1,11 @@
-import { NavController, NavParams } from 'ionic-angular';
-import { Component, ViewChild } from '@angular/core';
+import { NavController, NavParams, Platform } from 'ionic-angular';
+import { Component, ViewChild, ElementRef, Input } from '@angular/core';
 
 import { AnalysedImage } from '../../models/analysedImage';
 import { Box } from '../../models/qopiusBox';
+
+import { Observable } from 'rxjs/Rx';
+import { Subscription } from 'rxjs/Subscription';
 
 import { Image } from '../../services/image';
 
@@ -12,30 +15,49 @@ import { Image } from '../../services/image';
 })
 
 export class ImageDetailPage {
-    @ViewChild('canvas') canvas;
-    _image: String;
-    _analysedImage: AnalysedImage[];
-    _boxes: Box[];
-    _index: any;
+    @ViewChild("bgimg") img: ElementRef;
+    timer: Subscription;
+    image: AnalysedImage;
     resolutionScale: number;
-    otherScale: number;
-    visible: boolean = false;
+    visible: boolean = true;
 
 
-    constructor(private nav: NavController, private navParam: NavParams, private imageService: Image) {
+    constructor(private platform: Platform, private nav: NavController, private navParam: NavParams, private imageService: Image) {
         console.log("imageDetailPage.ts/Constructor");
-        this._index = this.navParam.get("photo_index");
-        this._analysedImage = this.imageService._analyzedImage;
-        this._boxes = [];
         this.initialise();
     }
 
     initialise() {
-        this._image = this._analysedImage[this._index].image;
-        //this.canvas.drawImage(this._image, 0,0);
+        console.log("imageDetailPage.ts/initialise");
+        this.image = this.imageService._analyzedImage[this.navParam.get("photo_index")];
+    }
 
-        this._boxes = this._analysedImage[this._index].boxes;
-        console.log("imageDetailPage.ts/initialise, box.x1: " + this._analysedImage[this._index].boxes.length);
+     ngAfterViewInit() {
+    // Perdiodically check for resolution change, and redraw boxes when needed
+    // There may be some better, event based way to do this, but I haven't found any
+    this.timer = Observable.interval(500).subscribe(()=> {
+      let resolutionScale = this.img.nativeElement.height /
+        this.img.nativeElement.naturalHeight;
+      if (this.resolutionScale != resolutionScale) {
+        this.resolutionScale = resolutionScale;
+        this.visible = true;
+      }
+    });
+  }
+
+
+    getKeysArray() {
+        if(this.image.boxes) {
+             return Object.keys(this.image.boxes);
+        }
+        else {
+            return false;
+        }
+       
+    }
+
+    drawBoxes(){  
+
     }
 
     edit(index: any) {

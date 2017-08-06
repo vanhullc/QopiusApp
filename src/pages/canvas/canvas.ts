@@ -35,7 +35,7 @@ export class CanvasPage {
 
     openPhoto(index: any) {
         console.log("imageDetail/initializeBoxes/urlBoxes : "+ this._images[index]);
-        this.nav.push(ImageDetailPage, {photo_index: index, boxesJSon: this._boxesJSon});
+        this.nav.push(ImageDetailPage, {photo_index: index});
     }
 
     // Open the cameraPage to add new pics to the toolkit

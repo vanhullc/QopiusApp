@@ -1,4 +1,4 @@
-import { ToastController, AlertController, NavController } from 'ionic-angular';
+import { ToastController, AlertController, NavController, MenuController } from 'ionic-angular';
 import { Component } from '@angular/core';
 
 import { Camera, CameraOptions } from '@ionic-native/camera';
@@ -28,7 +28,7 @@ export class CameraPage {
   _cacheDirectory: any;
   options: CameraOptions;
 
-  constructor(private nav: NavController, private alert: AlertController, private file: File, private toast: ToastController, private camera: Camera, private imageService: Image) {
+  constructor(private menu: MenuController, private nav: NavController, private alert: AlertController, private file: File, private toast: ToastController, private camera: Camera, private imageService: Image) {
     this._cacheDirectory = this.file.cacheDirectory;
   }
 
@@ -142,4 +142,8 @@ export class CameraPage {
         toast.present();
       });
   }
+    toggleMenu() {
+        console.log("home/toggleMenu");
+        this.menu.toggle();
+    }
 }
