@@ -7,7 +7,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 //Load pages
 import { FirstRunPage } from '../pages/pages';
 import { ReportPage } from '../pages/report/report';
-import { RequestDetailPage } from '../pages/requestDetail/requestDetail';
+import { AlertDetailPage } from '../pages/alertDetail/alertDetail';
 import { StatistiquePage } from '../pages/statistique/statistique';
 import { CameraPage } from '../pages/camera/camera';
 import { ImageDetailPage } from '../pages/imageDetail/imageDetail';
@@ -34,7 +34,7 @@ export class MyApp {
   ]
 
   pages = [
-    {title: 'RequestDetail', component: RequestDetailPage},
+    {title: 'AlertDetail', component: AlertDetailPage},
     {title: 'Report', component: ReportPage},
     {title: 'Statistique', component: StatistiquePage},
     {title: 'Camera', component: CameraPage},

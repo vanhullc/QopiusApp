@@ -3,7 +3,7 @@
     <button ion-button (click)="toggleMenu()">
         <ion-icon name="menu"></ion-icon>
 	  </button>
-    <ion-title center (click)="initialiseRequest()">Qopius</ion-title>
+    <ion-title center (click)="initialiseAlert()">Qopius</ion-title>
     <ion-buttons right>
       <button ion-button (click)="switchArchiveMode()">
           <ion-icon name="archive"></ion-icon>
@@ -18,17 +18,15 @@
   <ion-card>
 
     <ion-item>
-      <p center>You got <ion-badge center item-end>{{requestNumber}}</ion-badge> request{{mode}}</p>
+      <p center>You got <ion-badge center item-end>{{alertNumber}}</ion-badge> alert{{mode}}</p>
     </ion-item>
 
   </ion-card>
   
-  <ion-card *ngFor="let request of requests" (click)="openRequest(request)">
+  <ion-card *ngFor="let alert of alerts" (click)="openAlert(alert)">
 
-    <ion-item id="request">
-      <h2>{{request.product}}</h2>
-      <h3>{{request.category}}</h3>
-      <p>{{request.date.getDate()}}/{{request.date.getMonth()+1}}/{{request.date.getFullYear()}} : {{request.type}}</p>
+    <ion-item id="alert">
+      <h4>{{alert.date.getDate()}}/{{alert.date.getMonth()+1}}/{{alert.date.getFullYear()}} : {{alert.text}}</h4>
     </ion-item>
 
   </ion-card>
@@ -38,7 +36,7 @@
 <ion-footer>
   <ion-scroll style="white-space: nowrap; height: 50px" scrollX="true">
     <ion-segment style="width: 200%;">
-      <button *ngFor="let tag of tags" ion-button (click)="filterRequest(tag)">
+      <button *ngFor="let tag of tags" ion-button (click)="filterAlert(tag)">
             <h4>{{tag}}</h4>
         </button>
     </ion-segment>

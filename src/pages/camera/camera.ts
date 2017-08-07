@@ -132,7 +132,7 @@ export class CameraPage {
         console.log("image pushed");
       }, (err) => {
         // Handle error
-        //this._images.push("http://www.daimto.com/wp-content/uploads/2014/08/errorstop.png");
+        this._images.push("http://www.daimto.com/wp-content/uploads/2014/08/errorstop.png");
         console.log(this._images);
         let toast = this.toast.create({
           message: err,

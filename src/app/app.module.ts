@@ -6,7 +6,7 @@ import { Storage, IonicStorageModule } from '@ionic/storage';
 
 import { MyApp } from './app.component';
 
-import { RequestDetailPage } from '../pages/requestDetail/requestDetail';
+import { AlertDetailPage } from '../pages/alertDetail/alertDetail';
 import { ReportPage } from '../pages/report/report';
 import { StatistiquePage } from '../pages/statistique/statistique';
 import { CameraPage } from '../pages/camera/camera';
@@ -20,7 +20,7 @@ import { Chart } from '../services/chart';
 import { User } from '../services/user';
 import { Settings } from '../services/settings';
 import { Image } from '../services/image';
-import { RequestService } from '../services/request';
+import { AlertService } from '../services/alert';
 
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -47,7 +47,7 @@ export function provideSettings(storage: Storage) {
   declarations: [
     MyApp,
     ReportPage,
-    RequestDetailPage,
+    AlertDetailPage,
     StatistiquePage,
     CameraPage,
     ImageDetailPage,
@@ -66,7 +66,7 @@ export function provideSettings(storage: Storage) {
   entryComponents: [
     MyApp,
     ReportPage,
-    RequestDetailPage,
+    AlertDetailPage,
     StatistiquePage,
     CameraPage,
     ImageDetailPage,
@@ -77,7 +77,7 @@ export function provideSettings(storage: Storage) {
   providers: [
     Api,
     Chart,
-    RequestService,
+    AlertService,
     User,
     Image,
     File,

@@ -1,27 +1,27 @@
 import { Component } from '@angular/core';
 import { AlertController, NavController, NavParams } from 'ionic-angular';
 
-import { Request } from '../../models/request';
+import { Alert } from '../../models/alert';
 
-import { RequestService } from '../../services/request';
+import { AlertService } from '../../services/alert';
 
 @Component ({
-    templateUrl: 'requestDetail.html',
-    selector: 'requestDetail.scss'
+    templateUrl: 'alertDetail.html',
+    selector: 'alertDetail.scss'
 })
 
-export class RequestDetailPage {
-    private request: Request;
+export class AlertDetailPage {
+    private alert: Alert;
     image: any;
 
-    constructor(private alertCtrl: AlertController, private navParams: NavParams, private nav: NavController, private requestService: RequestService) {
-        this.request = this.navParams.get("request");
-        this.image = this.request.image;
+    constructor(private alertCtrl: AlertController, private navParams: NavParams, private nav: NavController, private alertService: AlertService) {
+        this.alert = this.navParams.get("alert");
+        this.image = this.alert.image;
     }
 
     close() {
         let alert = this.alertCtrl.create({
-            title: 'Why cannot you archive the request?',
+            title: 'Why cannot you archive the alert?',
             inputs: [
             {
                 label: 'Product not available',
@@ -29,13 +29,13 @@ export class RequestDetailPage {
                 type: 'checkbox'
             },
             {
-                label: 'Request error',
-                value: 'Request error',
+                label: 'Alert error',
+                value: 'Alert error',
                 type: 'checkbox'
             },
             {
-                label: 'Mismatch photo/request',
-                value: 'Mismatch photo/request',
+                label: 'Mismatch photo/alert',
+                value: 'Mismatch photo/alert',
                 type: 'checkbox'
             },
             {
@@ -49,7 +49,7 @@ export class RequestDetailPage {
                 text: 'Done',
                 handler: data => {
                     this.nav.pop();
-                    this.request.cancelOptions.push(data);
+                    this.alert.cancelOptions.push(data);
                 }
             }
             ]
@@ -58,7 +58,7 @@ export class RequestDetailPage {
     }
 
     validate() {
-        this.requestService.remove(this.request);
+        this.alertService.remove(this.alert);
         this.nav.pop();
     }
 }
