@@ -2,8 +2,11 @@ import { ModalController, NavController, MenuController } from 'ionic-angular';
 import { Component } from '@angular/core';
 
 import { AlertService } from '../../services/alert';
+import { Image } from '../../services/image';
 
 import { Alert } from '../../models/alert';
+import { Issue } from '../../models/issue';
+import { DisplayIssue } from '../../models/displayIssue';
 
 import { AlertDetailPage } from '../alertDetail/alertDetail';
 
@@ -17,18 +20,20 @@ import { AlertDetailPage } from '../alertDetail/alertDetail';
 */
 
 export class HomePage {
-    private alerts: Alert[];
+    private displayIssues: DisplayIssue[];
     private modal;
-    alertNumber;
+    issuesNumber;
     mode;
-    tags = ["Today", "Last Week", "Out_of_stock", "misplaced_product"];
+    tags = ["extra_facing", "empty_slot", "out_of_stock", "misplaced_product"];
+    _toolkit: any;
 
-    constructor(private menu: MenuController, private modalCtrl: ModalController, private nav: NavController, private alertService: AlertService) {
+    constructor(private menu: MenuController, private modalCtrl: ModalController, private nav: NavController, private alertService: AlertService, private imageService: Image) {
         console.log("home/constructor");
         this.menu.enable(true);
         this.mode = ".";
-        this.alertNumber = 0;
-        this.initialiseAlert();
+        this._toolkit = "y6W4gm";
+        this.issuesNumber = 0;
+        this.initialise();
     }
 
     toggleMenu() {
@@ -36,23 +41,27 @@ export class HomePage {
         this.menu.toggle();
     }
 
+    initialise() {
+        this.imageService.getAnalysedImages(this._toolkit).subscribe(
+            () => {
+                this.initialiseAlert();
+            }
+        );
+    }
+
     initialiseAlert() {
         this.alertService.getListAlert().subscribe(
             () => {
-                this.alerts = this.alertService.listAlert;
-                this.alertNumber = this.alerts.length;
-                console.log("home/initialiseAlert/alerts:"+this.alerts.toString());
-            },
-            (err) => {
-                console.error("initialiseAlertERROR");
+                this.displayIssues = this.alertService.getListDisplayIssues();
+                this.issuesNumber = this.displayIssues.length;
+                console.log("InitialiseAlert/length : " + this.displayIssues.length);
             }
         );
-        this.mode = ".";
     }
 
-    openAlert(alert: Alert) {
-        console.log("home/openAlert(id:" + alert.id.toString() + ")");
-        this.modal = this.modalCtrl.create(AlertDetailPage, {alert: alert});
+    openIssue(issue: DisplayIssue) {
+        console.log("home/openAlert(id:" + issue.issueID + ")");
+        this.modal = this.modalCtrl.create(AlertDetailPage, { issue: issue });
         this.modal.onDidDismiss(
             () => {
                 this.initialiseAlert();
@@ -62,38 +71,13 @@ export class HomePage {
     }
 
     switchArchiveMode() {
-         this.alerts = this.alertService.getListArchivedAlert();
-         this.alertNumber = this.alertService.getListArchivedAlert().length;
-         this.mode = " archived";
+        this.displayIssues = this.alertService.getListDisplayArchivedIssues();
+        this.issuesNumber = this.displayIssues.length;
+        this.mode = " archived";
     }
 
-    filterAlert(filter: any) {
-        console.log("home/filterAlert(filter: "+filter + ")");
-        switch(filter) {
-            case "Today":
-                let today = new Date();
-                this.alerts = this.alertService.filterAlertByDate(today);
-                this.mode=" from today.";
-                this.alertNumber = this.alertService.filterAlertByDate(today).length;
-                break;
-            case "Last Week":
-                let lastWeek = new Date();
-                lastWeek.setDate(lastWeek.getDate() - 7);
-                this.alerts = this.alertService.filterAlertInferiorDate(lastWeek);
-                this.mode=" from last week.";
-                this.alertNumber = this.alertService.filterAlertInferiorDate(lastWeek).length;
-                break;
-            case "out_of_stock":
-                this.alerts = this.alertService.filterAlertByType("out_of_stock");
-                this.mode=" : Out of stock.";
-                this.alertNumber = this.alertService.filterAlertByType("out_of_stock").length;
-                break;
-            case "misplaced_product":
-                this.alerts = this.alertService.filterAlertByType("misplaced_productg");
-                this.mode=" : misplaced_product.";
-                this.alertNumber = this.alertService.filterAlertByType("misplaced_product").length;
-                break;
-        }
+    filterAlert(tag: any) {
+        //this.alerts = this.alertService.filterType(tag);
+        //this.issuesNumber = this.alerts.length; 
     }
-
 }

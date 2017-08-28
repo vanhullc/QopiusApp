@@ -23,10 +23,11 @@
 
   </ion-card>
   
-  <ion-card *ngFor="let alert of alerts" (click)="openAlert(alert)">
+  <ion-card *ngFor="let issue of displayIssues" (click)="openIssue(issue)">
 
-    <ion-item id="alert">
-      <h4>{{alert.date.getDate()}}/{{alert.date.getMonth()+1}}/{{alert.date.getFullYear()}} : {{alert.text}}</h4>
+    <ion-item >
+      <h4>{{issue.timestamp | date:'hh:mm'}} : {{issue.product}}</h4>
+      <h4>{{issue.name}}</h4>
     </ion-item>
 
   </ion-card>
@@ -36,7 +37,7 @@
 <ion-footer>
   <ion-scroll style="white-space: nowrap; height: 50px" scrollX="true">
     <ion-segment style="width: 200%;">
-      <button *ngFor="let tag of tags" ion-button (click)="filterAlert(tag)">
+      <button *ngFor="let tag of tags" (click)="filterAlert(tag)" ion-button>
             <h4>{{tag}}</h4>
         </button>
     </ion-segment>

@@ -200,6 +200,17 @@ export class Image {
         return seq;
     }
 
+    getAnalysedImageByName(imageName: any) {// Get image linked to the alert.
+        // WARNING string comparaison is wheter the imageName is INCLUDED in the analyzedImage row, not strictly similar. 
+        console.log("service/getImage");
+        for(let i = 0; i < this._analyzedImage.length; i++) {
+            console.log(this._analyzedImage[i].imageName + " === " + imageName);
+            if(this._analyzedImage[i].imageName.indexOf(imageName) !== -1) {
+                return this._analyzedImage[i];
+            }
+        }
+    }
+
     saveTask(resp) {
         this._taskID = resp.taskID.id;
     }

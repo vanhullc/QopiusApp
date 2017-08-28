@@ -1,29 +1,31 @@
 import { Injectable } from '@angular/core';
 
 import { Alert } from '../models/alert';
+import { Issue } from '../models/issue';
+import { Type } from '../models/type';
+import { DisplayIssue } from '../models/displayIssue';
 
 import { Api } from '../services/api';
 
 import { Http } from '@angular/http';
 import { User } from '../services/user';
+import { Image } from '../services/image';
 
 @Injectable()
 
-export class AlertService { 
+export class AlertService {
     listAlert: Alert[];
     listAlertArchived: Alert[];
     _toolkit: any = "y6W4gm";
     locationID: string = "Es4bGvNFPL";
     missionID: string = "oPerGdf345";
 
-    constructor(public http: Http, public api: Api, public user: User) {
+    constructor(public http: Http, public api: Api, public user: User, private imageService: Image) {
         this.initialise();
     }
 
     initialise() {
         console.log("alertService/initialise");
-        this.listAlert = [];
-        this.listAlertArchived = [];
     }
 
     getListAlert() {
@@ -34,6 +36,7 @@ export class AlertService {
             session_password: this.user._user.session_password,
             locationID: this.locationID,
             missionID: this.missionID,
+            timeDelta: 10000000
             //companyID: "ISHJJh"
         }
 
@@ -58,11 +61,24 @@ export class AlertService {
 
     }
 
-    saveAlert(resp) {
+    getIssueAnalysedImage(image_name: any) {
+        return this.imageService.getAnalysedImageByName(image_name);
+    }
+
+    saveAlert(res) {
         this.listAlert = [];
-        for (let i = 0; i < resp.length; i++) {
-            console.log("DEBUG: "+ resp[i].missionID + resp[i].text + resp[i].companyID + resp[i].trigger_time + resp[i].locationID + resp[i].issues);
-            this.listAlert.push(new Alert(i, resp[i].missionID, resp[i].text, resp[i].companyID, resp[i].trigger_time, resp[i].locationID, resp[i].issues));
+        this.listAlertArchived = [];
+        let tempAlert: Alert;
+        for (let i = 0; i < res.length; i++) {
+            console.log("DEBUG: " + res[i].missionID + res[i].text + res[i].companyID + res[i].trigger_time + res[i].locationID + res[i].issues);
+            tempAlert = res[i];
+            if (tempAlert.status !== "completed") {
+                this.listAlert.push(tempAlert);
+            }
+            else {
+                this.listAlertArchived.push(tempAlert);
+            }
+
         }
         console.log("alertService/saveAlert/length : " + this.listAlert.length);
     }
@@ -72,72 +88,81 @@ export class AlertService {
         return this.listAlertArchived;
     }
 
-    remove(alert: Alert) {
-        console.log("alertService/remove alertId: " + alert.id);
-        let listAlertFiltered: Alert[] = [];
-        for(let i = 0; i < this.listAlert.length; i++) {
-            if(this.listAlert[i] != alert) {
-                listAlertFiltered.push(this.listAlert[i]);
-            }
-            else {
-                this.listAlertArchived.push(this.listAlert[i]);
+    getListDisplayIssues() {
+        let listDisplayIssues: DisplayIssue[] = [];
+        let displayIssue: DisplayIssue;
+        let product: any;
+        for (let i = 0; i < this.listAlert.length; i++) {
+            for (let j = 0; j < this.listAlert[i].issues.length; j++) {
+                if (this.listAlert[i].issues[j].type[0]) {
+                    product = "";
+                    for (let k = 0; k < this.listAlert[i].issues[j].type.length; k++) {
+                        if(this.listAlert[i].issues[j].type[k].name){
+                            product += this.listAlert[i].issues[j].type[k].name + " ";
+                        }
+                        else if (this.listAlert[i].issues[j].type[k].real){
+                            product += this.listAlert[i].issues[j].type[k].real + " ";
+                        }
+                        else {
+                            product += this.listAlert[i].issues[j].type[k] + " ";
+                        }
+                    }
+                }
+                displayIssue = {
+                    "name": this.listAlert[i].issues[j].name,
+                    "product": product,
+                    "timestamp": this.listAlert[i].trigger_time,
+                    "alertID": this.listAlert[i].id,
+                    "issueID": j,
+                    "image_name": this.listAlert[i].image_name
+                }
+                listDisplayIssues.push(displayIssue);
             }
         }
-        this.listAlert = listAlertFiltered;
+        return listDisplayIssues;
     }
+
+    getListDisplayArchivedIssues() {
+        let listDisplayIssues: DisplayIssue[] = [];
+        let displayIssue: DisplayIssue;
+        let product: any;
+        for (let i = 0; i < this.listAlertArchived.length; i++) {
+            for (let j = 0; j < this.listAlertArchived[i].issues.length; j++) {
+                if (this.listAlertArchived[i].issues[j].name) {
+                    product = this.listAlertArchived[i].issues[j].name;
+                }
+                else if (this.listAlertArchived[i].issues[j].type[0]) {
+                    product = "";
+                    for (let k = 0; k < this.listAlertArchived[i].issues[j].type.length; k++) {
+                        product += this.listAlertArchived[i].issues[j].type[k].name;
+                    }
+                }
+                else {
+                    product = "product";
+                }
+                displayIssue = {
+                    "name": this.listAlertArchived[i].issues[j].name,
+                    "product": product,
+                    "timestamp": this.listAlertArchived[i].trigger_time,
+                    "alertID": this.listAlertArchived[i].id,
+                    "issueID": j,
+                    "image_name" : this.listAlertArchived[i].image_name
+                }
+            }
+        }
+        return listDisplayIssues;
+    }
+
 
     /* All filter are out to date */
 
-    filterAlertByType(filterAlert: String) {
-        console.log("alertService/filteralertByType");
+    filterType(tag: string) {
         let listAlertFiltered: Alert[] = [];
-        switch (filterAlert) {
-            case "extra_facing" : 
-                this.filterType(1, listAlertFiltered);
-                break;
-            case "empty_slot" : 
-                this.filterType(2, listAlertFiltered);
-                break;
-            case "forbidden_product" : 
-                this.filterType(3, listAlertFiltered);
-                break;
-            case "misplaced_product" : 
-                this.filterType(4, listAlertFiltered);
-                break;
-            case "out_of_stock" : 
-                this.filterType(5, listAlertFiltered);
-                break;
-            }
-        return listAlertFiltered;
-    }
-
-    filterType(i, listAlertFiltered) {
-        for(let i = 0; i < this.listAlert.length; i++) {
-            if(this.listAlert[i].issues[i] != "") {
-                listAlertFiltered.push(this.listAlert[i]);
-            }
-        }
-    }
-
-    filterAlertByDate(filterAlert: Date) {
-        console.log("alertService/filterAlertByDate");
-        let listAlertFiltered: Alert[] = [];
-        for(let i = 0; i < this.listAlert.length; i++) {
-            if(this.listAlert[i].date.getDate() === filterAlert.getDate() && 
-               this.listAlert[i].date.getMonth() === filterAlert.getMonth() && 
-               this.listAlert[i].date.getFullYear() === filterAlert.getFullYear()) {
-                listAlertFiltered.push(this.listAlert[i]);
-            }
-        }
-        return listAlertFiltered;
-    }
-
-    filterAlertInferiorDate(filterAlert: Date) {
-        console.log("alertService/filterAlertInferiorDate");
-        let listAlertFiltered: Alert[] = [];
-        for(let i = 0; i < this.listAlert.length; i++) {
-            if(this.listAlert[i].date.getTime() >= filterAlert.getTime()) {
-                listAlertFiltered.push(this.listAlert[i]);
+        for (let i = 0; i < this.listAlert.length; i++) {
+            for (let j = 0; j < this.listAlert[i].issues.length; j++) {
+                if (this.listAlert[i].issues[j].name == tag) {
+                    listAlertFiltered.push(this.listAlert[i]);
+                }
             }
         }
         return listAlertFiltered;

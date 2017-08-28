@@ -1,10 +1,15 @@
 <ion-content class="modal">
     <ion-slides>
         <ion-slide>
-            <h2>{{alert.product}}</h2>
-            <h3>{{alert.category}}</h3>
-            <p>{{alert.date.getDate()}}/{{alert.date.getMonth()+1}}/{{alert.date.getFullYear()}} : {{alert.type}}</p>
-            <img style="height:80%; width:80%;" [src]="image" class="slider__image" />
+            <h2>{{issue.product}}</h2>
+            <p>{{issue.name}}</p>
+            <div style="width:100%" class="wrapper">
+                <img #bgimg [src]="image.image" id="bg-img">
+                <div class="box" *ngFor="let key of getKeysArray()" [style.left.px]="image.boxes[key].x1 * resolutionScale" [style.top.px]="image.boxes[key].y1 * resolutionScale"
+                    [style.width.px]="(image.boxes[key].x2 - image.boxes[key].x1) * resolutionScale" [style.height.px]="(image.boxes[key].y2 - image.boxes[key].y1) * resolutionScale"
+                    [hidden]="visible" [ngClass]="{ 'active': image.boxes[key].active }">
+                </div>
+            </div>
         </ion-slide>
     </ion-slides>
     <ion-fab left bottom>
