@@ -1,5 +1,5 @@
 export class Type {
-    boxID: any;
+    boxID: any[];
     name: string;
     result: string;
     n: any;

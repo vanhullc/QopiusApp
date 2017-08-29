@@ -33,7 +33,7 @@ export class Image {
         this._toolkit = "y6W4gm";
     }
 
-    
+
 
     getTask() {// Get taskID. Used to post image for example
         console.log("service/getTask");
@@ -101,7 +101,7 @@ export class Image {
         return seq;
     }
 
-    
+
 
     uploadImage(zipFile: String) {// Prepare all the request parameter for the api/postImage function. Return the promise to the camera page to handle the response. 
         console.log("service/uploadImage");
@@ -200,15 +200,34 @@ export class Image {
         return seq;
     }
 
-    getAnalysedImageByName(imageName: any) {// Get image linked to the alert.
+    getAnalysedImageByName(imageName: any, boxID: number[]) {// Get image linked to the alert.
         // WARNING string comparaison is wheter the imageName is INCLUDED in the analyzedImage row, not strictly similar. 
         console.log("service/getImage");
-        for(let i = 0; i < this._analyzedImage.length; i++) {
+        var analysedImage: AnalysedImage;
+        for (let i = 0; i < this._analyzedImage.length; i++) {
             console.log(this._analyzedImage[i].imageName + " === " + imageName);
-            if(this._analyzedImage[i].imageName.indexOf(imageName) !== -1) {
-                return this._analyzedImage[i];
+            if (this._analyzedImage[i].imageName.indexOf(imageName) !== -1) {
+                analysedImage = {
+                    "missionID": this._analyzedImage[i].missionID,
+                    "image": this._analyzedImage[i].image,
+                    "jsonName": this._analyzedImage[i].jsonName,
+                    "json": this._analyzedImage[i].json,
+                    "imageName": this._analyzedImage[i].imageName,
+                    "locationID": this._analyzedImage[i].locationID,
+                    "date": this._analyzedImage[i].date,
+                    "boxes": this._analyzedImage[i].boxes
+                };
+                analysedImage.boxes = [];
+                console.log(this._analyzedImage[i].boxes[0]);
+                if (boxID[0]) {
+                    for (let j = 0; j < boxID.length; j++) {
+                        analysedImage.boxes.push(this._analyzedImage[i].boxes[boxID[j]]);
+                    }
+                }
             }
         }
+        console.log(analysedImage.boxes);
+        return analysedImage;
     }
 
     saveTask(resp) {
@@ -225,17 +244,17 @@ export class Image {
         }
     }
 
-    getBoxes(index:any) {
+    getBoxes(index: any) {
         console.log("service/getBoxes");
         this.api.getUrl(this._analyzedImage[index].json.toString())
-        .map(res => res.json())
-        .subscribe(
+            .map(res => res.json())
+            .subscribe(
             res => {
                 this._analyzedImage[index].boxes = res.results;
             }, err => {
-                console.error("ERROR"+JSON.stringify(err));
+                console.error("ERROR" + JSON.stringify(err));
             }
-        );
+            );
     }
 
     initAnalysedImage() {// Default position of _images and _analyzedImages

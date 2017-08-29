@@ -12,7 +12,7 @@ import { Image } from '../../services/image';
 
 @Component({
     templateUrl: 'alertDetail.html',
-    selector: 'alertDetail.scss'
+    selector: 'page-alertDetail'
 })
 
 export class AlertDetailPage {
@@ -22,21 +22,12 @@ export class AlertDetailPage {
     private issue: DisplayIssue;
     image: AnalysedImage;
     visible: boolean = true;
+    boxStyle;
 
     constructor(private alertCtrl: AlertController, private navParams: NavParams, private nav: NavController, private alertService: AlertService, private imageService: Image) {
         this.issue = this.navParams.get("issue");
-        this.image = this.alertService.getIssueAnalysedImage(this.issue.image_name);
-    }
-
-    getKeysArray() {
-        if (this.image.boxes) {
-            console.log("WAZAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-            return Object.keys(this.image.boxes);
-        }
-        else {
-            return false;
-        }
-
+        this.image = this.alertService.getIssueAnalysedImage(this.issue.image_name, this.issue.boxID);
+        console.log(this.issue.boxID);
     }
 
     ngAfterViewInit() {
@@ -50,6 +41,20 @@ export class AlertDetailPage {
                 this.visible = true;
             }
         });
+    }
+
+    initBoxStyle() {
+
+    }
+
+    getKeysArray() {
+        if (this.image.boxes) {
+            return Object.keys(this.image.boxes);
+        }
+        else {
+            return false;
+        }
+
     }
 
     close() {
@@ -81,6 +86,7 @@ export class AlertDetailPage {
                 {
                     text: 'Done',
                     handler: data => {
+                        this.alertService.dismissAlertFeedback(data);
                         this.nav.pop();
                     }
                 }
@@ -90,7 +96,13 @@ export class AlertDetailPage {
     }
 
     validate() {
-        //this.alertService.remove(this.alert);
-        this.nav.pop();
+        this.alertService.changeIssueStatus(this.issue.alertID, this.issue.name, "completed").subscribe(
+            (res) => {
+                this.nav.pop();
+            },
+            (err) => {
+                this.nav.pop();
+            }
+        );
     }
 }

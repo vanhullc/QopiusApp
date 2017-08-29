@@ -1,17 +1,21 @@
-<ion-content class="modal">
-    <ion-slides>
-        <ion-slide>
+<ion-header no-border>
+  <ion-navbar color="dark">
+
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="modal" color="dark">
+
             <h2>{{issue.product}}</h2>
             <p>{{issue.name}}</p>
             <div style="width:100%" class="wrapper">
                 <img #bgimg [src]="image.image" id="bg-img">
                 <div class="box" *ngFor="let key of getKeysArray()" [style.left.px]="image.boxes[key].x1 * resolutionScale" [style.top.px]="image.boxes[key].y1 * resolutionScale"
                     [style.width.px]="(image.boxes[key].x2 - image.boxes[key].x1) * resolutionScale" [style.height.px]="(image.boxes[key].y2 - image.boxes[key].y1) * resolutionScale"
-                    [hidden]="visible" [ngClass]="{ 'active': image.boxes[key].active }">
+                    [hidden]="!visible" [ngClass]="{ 'active': image.boxes[key].active }">
                 </div>
             </div>
-        </ion-slide>
-    </ion-slides>
+
     <ion-fab left bottom>
         <button ion-fab color="danger" (click)="close()">
             <ion-icon name="close"></ion-icon>

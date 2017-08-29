@@ -18,7 +18,7 @@
   <ion-card>
 
     <ion-item>
-      <p center>You got <ion-badge center item-end>{{alertNumber}}</ion-badge> alert{{mode}}</p>
+      <p center>You got <ion-badge center item-end>{{issuesNumber}}</ion-badge> alert{{mode}}</p>
     </ion-item>
 
   </ion-card>
@@ -36,7 +36,7 @@
 
 <ion-footer>
   <ion-scroll style="white-space: nowrap; height: 50px" scrollX="true">
-    <ion-segment style="width: 200%;">
+    <ion-segment style="width: 300%;">
       <button *ngFor="let tag of tags" (click)="filterAlert(tag)" ion-button>
             <h4>{{tag}}</h4>
         </button>

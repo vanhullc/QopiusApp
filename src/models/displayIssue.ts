@@ -5,4 +5,5 @@ export class DisplayIssue {
     alertID: string;
     issueID: number;
     image_name: string;
+    boxID: number[];
 }

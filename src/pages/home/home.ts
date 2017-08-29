@@ -24,13 +24,13 @@ export class HomePage {
     private modal;
     issuesNumber;
     mode;
-    tags = ["extra_facing", "empty_slot", "out_of_stock", "misplaced_product"];
+    tags = ["day", "week", "month", "extra_facing", "empty_slot", "out_of_stock", "misplaced_product"];
     _toolkit: any;
 
     constructor(private menu: MenuController, private modalCtrl: ModalController, private nav: NavController, private alertService: AlertService, private imageService: Image) {
         console.log("home/constructor");
         this.menu.enable(true);
-        this.mode = ".";
+        this.mode = "";
         this._toolkit = "y6W4gm";
         this.issuesNumber = 0;
         this.initialise();
@@ -50,6 +50,7 @@ export class HomePage {
     }
 
     initialiseAlert() {
+        this.mode = "";
         this.alertService.getListAlert().subscribe(
             () => {
                 this.displayIssues = this.alertService.getListDisplayIssues();
@@ -60,24 +61,43 @@ export class HomePage {
     }
 
     openIssue(issue: DisplayIssue) {
-        console.log("home/openAlert(id:" + issue.issueID + ")");
-        this.modal = this.modalCtrl.create(AlertDetailPage, { issue: issue });
-        this.modal.onDidDismiss(
-            () => {
-                this.initialiseAlert();
-            }
-        );
-        this.modal.present();
+        if (this.mode != " archived") {
+            console.log("home/openAlert(id:" + issue.issueID + ")");
+            this.modal = this.modalCtrl.create(AlertDetailPage, { issue: issue });
+            this.modal.onDidDismiss(
+                () => {
+                    this.initialiseAlert();
+                }
+            );
+            this.modal.present();
+        }
     }
 
     switchArchiveMode() {
+        console.log("Home/switchArchiveMode");
         this.displayIssues = this.alertService.getListDisplayArchivedIssues();
         this.issuesNumber = this.displayIssues.length;
         this.mode = " archived";
     }
 
     filterAlert(tag: any) {
-        //this.alerts = this.alertService.filterType(tag);
-        //this.issuesNumber = this.alerts.length; 
+        if (tag === "day" || tag === "month" || tag === "week") {
+            if (this.mode === " archived") {
+                this.displayIssues = this.alertService.filterArchivedByDate(tag);
+            }
+            else {
+                this.displayIssues = this.alertService.filterByDate(tag);
+            }
+            this.issuesNumber = this.displayIssues.length;
+        }
+        else {
+            if (this.mode === " archived") {
+                this.displayIssues = this.alertService.filterArchivedByType(tag);
+            }
+            else {
+                this.displayIssues = this.alertService.filterByType(tag);
+            }
+            this.issuesNumber = this.displayIssues.length;
+        }
     }
 }

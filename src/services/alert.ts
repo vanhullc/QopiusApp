@@ -15,7 +15,8 @@ import { Image } from '../services/image';
 
 export class AlertService {
     listAlert: Alert[];
-    listAlertArchived: Alert[];
+    listDisplayIssues: DisplayIssue[];
+    listArchivedDisplayIssues: DisplayIssue[];
     _toolkit: any = "y6W4gm";
     locationID: string = "Es4bGvNFPL";
     missionID: string = "oPerGdf345";
@@ -61,110 +62,222 @@ export class AlertService {
 
     }
 
-    getIssueAnalysedImage(image_name: any) {
-        return this.imageService.getAnalysedImageByName(image_name);
+    dismissAlertFeedback(feedback: string) {
+
+    }
+
+    changeIssueStatus(alertID: string, issue: string, status: string) {
+        console.log("alertService/changeIssueStatus");
+
+        let body = {
+            accountID: this.user._user.accountID,
+            session_password: this.user._user.session_password,
+            mode: "update_issue_status",
+            alertID: alertID,
+            issue: issue,
+            status: status
+        }
+
+        let seq = this.api.post('alert', body).share();
+
+        seq
+            .map(res => res.json())
+            .subscribe(res => {
+                // If the API returned a successful response, mark the user as logged in
+                // Success if user info returned. Else error.
+                if (res === "success") {
+                    console.log("ChangeIssueStatus succeed")
+                }
+                else {
+                    console.error("API error when trying to connect", res);
+                }
+
+            }, err => {
+                console.error('ERROR', err);
+            });
+        return seq;
+    }
+
+    getIssueAnalysedImage(image_name: any, boxID: number[]) {
+        return this.imageService.getAnalysedImageByName(image_name, boxID);
     }
 
     saveAlert(res) {
         this.listAlert = [];
-        this.listAlertArchived = [];
         let tempAlert: Alert;
         for (let i = 0; i < res.length; i++) {
-            console.log("DEBUG: " + res[i].missionID + res[i].text + res[i].companyID + res[i].trigger_time + res[i].locationID + res[i].issues);
+            //console.log("DEBUG: " + res[i].missionID + res[i].text + res[i].companyID + res[i].trigger_time + res[i].locationID + res[i].issues);
             tempAlert = res[i];
-            if (tempAlert.status !== "completed") {
-                this.listAlert.push(tempAlert);
-            }
-            else {
-                this.listAlertArchived.push(tempAlert);
-            }
-
+            this.listAlert.push(tempAlert);
         }
         console.log("alertService/saveAlert/length : " + this.listAlert.length);
     }
 
-    getListArchivedAlert() {
-        console.log("alertService/getListArchivedAlert");
-        return this.listAlertArchived;
-    }
-
     getListDisplayIssues() {
-        let listDisplayIssues: DisplayIssue[] = [];
+        this.listDisplayIssues = [];
         let displayIssue: DisplayIssue;
         let product: any;
+        let boxID: number[];
         for (let i = 0; i < this.listAlert.length; i++) {
-            for (let j = 0; j < this.listAlert[i].issues.length; j++) {
-                if (this.listAlert[i].issues[j].type[0]) {
-                    product = "";
-                    for (let k = 0; k < this.listAlert[i].issues[j].type.length; k++) {
-                        if(this.listAlert[i].issues[j].type[k].name){
-                            product += this.listAlert[i].issues[j].type[k].name + " ";
+            // CHANGE IN PENDING WHEN TEST IS OVER
+            if (this.listAlert[i].status === "error") {
+                for (let j = 0; j < this.listAlert[i].issues.length; j++) {
+                    boxID = [];
+                    if (this.listAlert[i].issues[j].status === "pending") {
+                        if (this.listAlert[i].issues[j].type[0]) {
+                            product = "";
+                            for (let k = 0; k < this.listAlert[i].issues[j].type.length; k++) {
+                                if (this.listAlert[i].issues[j].type[k].boxID) {
+                                    for (let l = 0; l < this.listAlert[i].issues[j].type[k].boxID.length; l++) {
+                                        boxID.push(this.listAlert[i].issues[j].type[k].boxID[l]);
+                                    }
+                                }
+                                if (this.listAlert[i].issues[j].type[k].name) {
+                                    product += this.listAlert[i].issues[j].type[k].name + " ";
+                                }
+                                else if (this.listAlert[i].issues[j].type[k].real) {
+                                    product += this.listAlert[i].issues[j].type[k].real + " ";
+                                }
+                                else {
+                                    product += this.listAlert[i].issues[j].type[k] + " ";
+                                }
+                            }
                         }
-                        else if (this.listAlert[i].issues[j].type[k].real){
-                            product += this.listAlert[i].issues[j].type[k].real + " ";
+                        displayIssue = {
+                            "name": this.listAlert[i].issues[j].name,
+                            "product": product,
+                            "timestamp": this.listAlert[i].trigger_time,
+                            "alertID": this.listAlert[i].id,
+                            "issueID": j,
+                            "image_name": this.listAlert[i].image_name,
+                            "boxID": boxID
                         }
-                        else {
-                            product += this.listAlert[i].issues[j].type[k] + " ";
-                        }
+                        this.listDisplayIssues.push(displayIssue);
                     }
                 }
-                displayIssue = {
-                    "name": this.listAlert[i].issues[j].name,
-                    "product": product,
-                    "timestamp": this.listAlert[i].trigger_time,
-                    "alertID": this.listAlert[i].id,
-                    "issueID": j,
-                    "image_name": this.listAlert[i].image_name
-                }
-                listDisplayIssues.push(displayIssue);
             }
         }
-        return listDisplayIssues;
+        return this.listDisplayIssues;
     }
 
     getListDisplayArchivedIssues() {
-        let listDisplayIssues: DisplayIssue[] = [];
+        console.log("alertService/getListDisplayArchivedIssues");
+        this.listArchivedDisplayIssues = [];
         let displayIssue: DisplayIssue;
         let product: any;
-        for (let i = 0; i < this.listAlertArchived.length; i++) {
-            for (let j = 0; j < this.listAlertArchived[i].issues.length; j++) {
-                if (this.listAlertArchived[i].issues[j].name) {
-                    product = this.listAlertArchived[i].issues[j].name;
-                }
-                else if (this.listAlertArchived[i].issues[j].type[0]) {
+        let boxID: number[];
+        for (let i = 0; i < this.listAlert.length; i++) {
+            for (let j = 0; j < this.listAlert[i].issues.length; j++) {
+                boxID = [];
+                console.log(this.listAlert[i].issues[j].status);
+                if (this.listAlert[i].issues[j].status === "completed") {
                     product = "";
-                    for (let k = 0; k < this.listAlertArchived[i].issues[j].type.length; k++) {
-                        product += this.listAlertArchived[i].issues[j].type[k].name;
+                    if (this.listAlert[i].issues[j].name) {
+                        product = this.listAlert[i].issues[j].name;
                     }
-                }
-                else {
-                    product = "product";
-                }
-                displayIssue = {
-                    "name": this.listAlertArchived[i].issues[j].name,
-                    "product": product,
-                    "timestamp": this.listAlertArchived[i].trigger_time,
-                    "alertID": this.listAlertArchived[i].id,
-                    "issueID": j,
-                    "image_name" : this.listAlertArchived[i].image_name
+                    if (this.listAlert[i].issues[j].type[0]) {
+                        for (let k = 0; k < this.listAlert[i].issues[j].type.length; k++) {
+                            console.log("c");
+                            if (this.listAlert[i].issues[j].type[k].boxID) {
+                                for (let l = 0; l < this.listAlert[i].issues[j].type[k].boxID.length; l++) {
+                                    boxID.push(this.listAlert[i].issues[j].type[k].boxID[l]);
+                                }
+                            }
+                            if (this.listAlert[i].issues[j].type[k].name) {
+                                product += this.listAlert[i].issues[j].type[k].name + " ";
+                            }
+                            else if (this.listAlert[i].issues[j].type[k].real) {
+                                product += this.listAlert[i].issues[j].type[k].real + " ";
+                            }
+                            else {
+                                product += this.listAlert[i].issues[j].type[k] + " ";
+                            }
+                        }
+                    }
+                    else {
+                        product = "product";
+                    }
+
+                    displayIssue = {
+                        "name": this.listAlert[i].issues[j].name,
+                        "product": product,
+                        "timestamp": this.listAlert[i].trigger_time,
+                        "alertID": this.listAlert[i].id,
+                        "issueID": j,
+                        "image_name": this.listAlert[i].image_name,
+                        "boxID": boxID
+                    }
+                    this.listArchivedDisplayIssues.push(displayIssue);
                 }
             }
         }
-        return listDisplayIssues;
+        return this.listArchivedDisplayIssues;
     }
 
 
     /* All filter are out to date */
 
-    filterType(tag: string) {
-        let listAlertFiltered: Alert[] = [];
-        for (let i = 0; i < this.listAlert.length; i++) {
-            for (let j = 0; j < this.listAlert[i].issues.length; j++) {
-                if (this.listAlert[i].issues[j].name == tag) {
-                    listAlertFiltered.push(this.listAlert[i]);
-                }
+    filterByType(tag: string) {
+        let filteredDisplayIssues: DisplayIssue[] = [];
+        for (let i = 0; i < this.listDisplayIssues.length; i++) {
+            if (this.listDisplayIssues[i].name === tag) {
+                filteredDisplayIssues.push(this.listDisplayIssues[i]);
             }
         }
-        return listAlertFiltered;
+        return filteredDisplayIssues;
+    }
+
+    filterArchivedByType(tag: string) {
+        let filteredDisplayIssues: DisplayIssue[] = [];
+        for (let i = 0; i < this.listArchivedDisplayIssues.length; i++) {
+            if (this.listArchivedDisplayIssues[i].name === tag) {
+                filteredDisplayIssues.push(this.listArchivedDisplayIssues[i]);
+            }
+        }
+        return filteredDisplayIssues;
+    }
+
+    filterByDate(tag: string) {
+        let date = new Date().valueOf();
+        date = date / 1000;
+        if(tag === "day") {
+            date -= 86400;
+        }
+        else if (tag === "week") {
+            date -= 604800;
+        }
+        else if (tag === "month") {
+            date -= 2629743;
+        }
+        console.log("date: "+date);
+        let filteredDisplayIssues: DisplayIssue[] = [];
+        for (let i = 0; i < this.listDisplayIssues.length; i++) {
+            console.log("timestamp: "+this.listDisplayIssues[i].timestamp);
+            if (parseInt(this.listDisplayIssues[i].timestamp) >= date) {
+                filteredDisplayIssues.push(this.listDisplayIssues[i]);
+            }
+        }
+        return filteredDisplayIssues;
+    }
+
+    filterArchivedByDate(tag: string) {
+        let date = new Date().valueOf();
+        date = date / 1000;
+        if(tag === "day") {
+            date -= 86400;
+        }
+        else if (tag === "week") {
+            date -= 604800;
+        }
+        else if (tag === "month") {
+            date -= 2629743;
+        }
+        let filteredDisplayIssues: DisplayIssue[] = [];
+        for (let i = 0; i < this.listArchivedDisplayIssues.length; i++) {
+            if (parseInt(this.listArchivedDisplayIssues[i].timestamp) >= date) {
+                filteredDisplayIssues.push(this.listArchivedDisplayIssues[i]);
+            }
+        }
+        return filteredDisplayIssues;
     }
 }
