@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, RequestOptions, URLSearchParams } from '@angular/http';
 import 'rxjs/add/operator/map';
 
-import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer';
+import { FileTransfer, FileTransferObject, FileUploadOptions } from '@ionic-native/file-transfer';
 
 
 /**
@@ -47,18 +47,25 @@ export class Api {
 
   postImage(body: any) {
 
-    let options: any;
-    
-    options.params = {};
-    options.params.accountID = body.accountID;
-    options.params.session_password = body.session_password;
-    options.params.toolkitID = body._toolkit;
-    options.params.taskID = body._taskID;
-    options.params.mode = body.mode;
-    options.params.file = body.file;
+    let options :FileUploadOptions = {
+      fileKey: "file",
+      fileName: body.taskID + ".zip",
+      mimeType: "application/zip",
+      httpMethod: "POST",
+      /*params: {
+        accountID: body.accountID,
+        session_password: body.session_password,
+        toolkitID: body.toolkitID,
+        taskID: body.taskID,
+        mode: body.mode,
+        file: body.file
+      }*/
+    }
+
+    let url = this.postImageUrl + "?accountID=" + body.accountID + "&session_password=" + body.session_password + "&toolkitID=" + body.toolkitID + "&taskID=" + body.taskID + "&mode=" + body.mode;
 
     console.log("api/postImage");
-    return this.fileTransfer.upload(body.file, this.postImageUrl, options, true);
+    return this.fileTransfer.upload(body.file, url, options, true);
   }
 
   post(endpoint: string, body: any, options?: RequestOptions) {

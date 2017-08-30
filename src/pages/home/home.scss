@@ -1,6 +1,58 @@
 page-home {
-  .show-page {
-      left: 10%;
-      top: 10%;
+  .navbar {
+    color: white;
+    height: 50px;
+    #logo {
+      height : 40px;
+      width: 40px;
+      margin-left: 40%;
+    }
+    ion-icon {
+      color: #29a6cc;
+    }
+  }
+  .header {
+    background-color: #e9f3fe;
+    text-align: center;
+  }
+  .issue {
+    .product {
+      color: #858585;
+      font-family: Avenir-Heavy;
+      font-size: 22px;
+      text-transform: capitalize;
+    }
+    .status {
+      font-family: Avenir-Medium;
+      font-size: 19px;
+      color: #494949;
+      text-transform: capitalize;
+    }
+    .name {
+      font-family: Avenir-Medium;
+      font-size: 17px;
+      color: #989898;
+      text-transform: capitalize;
+    }
+    .arrow {
+      margin-top: 2%;
+      color: #858585;
+      text-align: right;
+    }
+  }
+
+  .filter {
+    color: #E9F3FE;
+  }
+  .item-ios.item-block .item-inner {
+    border-bottom-color: #E0E0E0;
+    border-bottom-width: 90%; 
+  }
+  .item-android.item-block .item-inner {
+    border-bottom-color: #E0E0E0;
+    border-bottom-width: 90%; 
+  }
+  .item {
+    padding-right: 16px;
   }
 }

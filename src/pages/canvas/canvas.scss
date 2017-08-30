@@ -1,4 +1,23 @@
 page-canvas {
+	.navbar {
+		color: white;
+		height: 50px;
+		#logo {
+			height : 40px;
+			width: 40px;
+			display: flex;
+			position: relative;
+			margin-right: auto;
+			margin-left: auto;
+		}
+		ion-icon {
+			color: #29a6cc;
+			width: 20px;
+		}
+		.button {
+			background-color: white;
+		}
+	}
     .image__grid {
 		margin-top: 5px;
 		overflow: hidden;

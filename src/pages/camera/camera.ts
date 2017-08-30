@@ -46,7 +46,10 @@ export class CameraPage {
         this.file.createFile(this._cacheDirectory, "Images.zip", true).then(
           (res) => {
             console.log("zip file created");
-          }), console.error("ERROR: zip file not created");
+          }, 
+          (err) => {
+            console.error("ERROR: zip file not created: " + err);
+          });
         this._zip = this._cacheDirectory + "Images.zip";
 
         this.imageService.getTask().subscribe(
@@ -62,14 +65,12 @@ export class CameraPage {
                       position: 'top'
                     });
                     toast.present();
-                    this.nav.pop();
                   }, (err) => {
-                    console.error("camera/uploadImageError Code: " + err.code + " & source: " + err.source + " & target: " + err.target);
+                    console.error("camera/uploadImageError Code: " + err.code + " & source: " + err.source + " & target: " + err.target + " & message: " + err.message);
                     let alert = this.alert.create({
                       message: 'camera/uploadImageError: ' + JSON.stringify(err)
                     });
                     alert.present();
-                    this.nav.pop();
                   });
               }, (err) => {
                 console.error("camera/postTaskError: " + JSON.stringify(err));
@@ -79,7 +80,6 @@ export class CameraPage {
                   position: 'top'
                 });
                 toast.present();
-                this.nav.pop();
               });
           }, (err) => {
             console.error("camera/getTaskError: " + JSON.stringify(err));
@@ -89,7 +89,6 @@ export class CameraPage {
               position: 'top'
             });
             toast.present();
-            this.nav.pop();
           });
       });
   }

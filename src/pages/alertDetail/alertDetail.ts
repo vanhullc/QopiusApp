@@ -27,7 +27,7 @@ export class AlertDetailPage {
     constructor(private alertCtrl: AlertController, private navParams: NavParams, private nav: NavController, private alertService: AlertService, private imageService: Image) {
         this.issue = this.navParams.get("issue");
         this.image = this.alertService.getIssueAnalysedImage(this.issue.image_name, this.issue.boxID);
-        console.log(this.issue.boxID);
+        console.log("BOOOOOOOOOOOOOOOOOXID ===== "+this.issue.boxID);
     }
 
     ngAfterViewInit() {
@@ -62,23 +62,18 @@ export class AlertDetailPage {
             title: 'Why cannot you archive the alert?',
             inputs: [
                 {
-                    label: 'Product not available',
-                    value: 'Product not available',
+                    label: 'not in warehouse',
+                    value: 'not in warehouse',
                     type: 'checkbox'
                 },
                 {
-                    label: 'Alert error',
-                    value: 'Alert error',
+                    label: 'new product',
+                    value: 'new product',
                     type: 'checkbox'
                 },
                 {
-                    label: 'Mismatch photo/alert',
-                    value: 'Mismatch photo/alert',
-                    type: 'checkbox'
-                },
-                {
-                    label: 'Price not available',
-                    value: 'Price not available',
+                    label: 'store promotion',
+                    value: 'store promotion',
                     type: 'checkbox'
                 }
             ],
@@ -86,7 +81,7 @@ export class AlertDetailPage {
                 {
                     text: 'Done',
                     handler: data => {
-                        this.alertService.dismissAlertFeedback(data);
+                        this.alertService.dismissAlertFeedback(this.issue.alertID, this.issue.name, "error", data);
                         this.nav.pop();
                     }
                 }

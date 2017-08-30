@@ -1,9 +1,13 @@
 <ion-header>
-	<ion-navbar color="primary">
-		<button ion-button (click)="toggleMenu()">
-        <ion-icon name="menu"></ion-icon>
+	<ion-navbar color="white" class="navbar">
+		<ion-row>
+		<button left ion-button (click)="toggleMenu()">
+        	<ion-icon color="#0079AD" name="menu"></ion-icon>
 	    </button>
-		<ion-title center>Qopius</ion-title>
+		<div id="logo">
+			<img src="https://static1.squarespace.com/static/55ab8f1fe4b031edd6fa0ed9/t/599ea390f7e0aba9e964b91f/1503990062200/?format=1500w" />
+		</div>
+		</ion-row>
 	</ion-navbar>
 
 </ion-header>
@@ -11,7 +15,7 @@
 <ion-content>
 	<div class="image__grid">
 		<div class="image__square" *ngFor="let image of _images; let i = index" (click)="openPhoto(i)">
-			<img [src]="image" />
+			<img [src]="image"/>
 		</div>
 	</div>
 </ion-content>

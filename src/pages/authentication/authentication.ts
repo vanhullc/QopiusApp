@@ -6,7 +6,8 @@ import { HomePage } from '../home/home';
 import { User } from '../../services/user';
 
 @Component({
-  templateUrl: 'authentication.html'
+  templateUrl: 'authentication.html',
+  selector: 'page-authentication'
 })
 
 /* 
@@ -14,6 +15,8 @@ import { User } from '../../services/user';
 */
 
 export class AuthenticationPage {
+
+  image: any;
 
   // Variable linked to the form
 
@@ -25,7 +28,7 @@ export class AuthenticationPage {
   private loginErrorString: "Login error"
 
   constructor(public toastCtrl: ToastController, public nav: NavController, public userService: User) {
-
+    this.image = "C:\Users\cyril\Documents\Stage_QOPIUS\QopiusApp\resources\logo.png";
   }
 
   // Function linked to the submit button of the form.

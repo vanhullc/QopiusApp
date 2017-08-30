@@ -1,6 +1,8 @@
 export class DisplayIssue {
     name: string;
     product: string;
+    status: string;
+    feedback: string;
     timestamp: string;
     alertID: string;
     issueID: number;

@@ -62,8 +62,37 @@ export class AlertService {
 
     }
 
-    dismissAlertFeedback(feedback: string) {
+    dismissAlertFeedback(alertID: string, issue: string, status: string, feedback: string) {
+        console.log("alertService/changeIssueStatus");
 
+        let body = {
+            accountID: this.user._user.accountID,
+            session_password: this.user._user.session_password,
+            mode: "update_issue_status",
+            alertID: alertID,
+            issue: issue,
+            status: status,
+            feedback: feedback
+        }
+
+        let seq = this.api.post('alert', body).share();
+
+        seq
+            .map(res => res.json())
+            .subscribe(res => {
+                // If the API returned a successful response, mark the user as logged in
+                // Success if user info returned. Else error.
+                if (res === "success") {
+                    console.log("ChangeIssueStatus succeed")
+                }
+                else {
+                    console.error("API error when trying to connect", res);
+                }
+
+            }, err => {
+                console.error('ERROR', err);
+            });
+        return seq;
     }
 
     changeIssueStatus(alertID: string, issue: string, status: string) {
@@ -120,10 +149,10 @@ export class AlertService {
         let boxID: number[];
         for (let i = 0; i < this.listAlert.length; i++) {
             // CHANGE IN PENDING WHEN TEST IS OVER
-            if (this.listAlert[i].status === "error") {
+            if (this.listAlert[i].status === "error" || this.listAlert[i].status === "pending") {
                 for (let j = 0; j < this.listAlert[i].issues.length; j++) {
                     boxID = [];
-                    if (this.listAlert[i].issues[j].status === "pending") {
+                    if (this.listAlert[i].issues[j].status === "pending" || this.listAlert[i].issues[j].status === "error") {
                         if (this.listAlert[i].issues[j].type[0]) {
                             product = "";
                             for (let k = 0; k < this.listAlert[i].issues[j].type.length; k++) {
@@ -146,6 +175,8 @@ export class AlertService {
                         displayIssue = {
                             "name": this.listAlert[i].issues[j].name,
                             "product": product,
+                            "status": this.listAlert[i].issues[j].status,
+                            "feedback": this.listAlert[i].issues[j].feedback,
                             "timestamp": this.listAlert[i].trigger_time,
                             "alertID": this.listAlert[i].id,
                             "issueID": j,
@@ -169,7 +200,6 @@ export class AlertService {
         for (let i = 0; i < this.listAlert.length; i++) {
             for (let j = 0; j < this.listAlert[i].issues.length; j++) {
                 boxID = [];
-                console.log(this.listAlert[i].issues[j].status);
                 if (this.listAlert[i].issues[j].status === "completed") {
                     product = "";
                     if (this.listAlert[i].issues[j].name) {
@@ -177,7 +207,6 @@ export class AlertService {
                     }
                     if (this.listAlert[i].issues[j].type[0]) {
                         for (let k = 0; k < this.listAlert[i].issues[j].type.length; k++) {
-                            console.log("c");
                             if (this.listAlert[i].issues[j].type[k].boxID) {
                                 for (let l = 0; l < this.listAlert[i].issues[j].type[k].boxID.length; l++) {
                                     boxID.push(this.listAlert[i].issues[j].type[k].boxID[l]);
@@ -201,6 +230,8 @@ export class AlertService {
                     displayIssue = {
                         "name": this.listAlert[i].issues[j].name,
                         "product": product,
+                        "status": this.listAlert[i].issues[j].status,
+                        "feedback": this.listAlert[i].issues[j].feedback,
                         "timestamp": this.listAlert[i].trigger_time,
                         "alertID": this.listAlert[i].id,
                         "issueID": j,

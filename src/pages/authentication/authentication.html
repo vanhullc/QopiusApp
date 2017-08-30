@@ -1,27 +1,22 @@
-<ion-header>
-
-  <ion-navbar color="primary">
-    <ion-title center>Login</ion-title>
-  </ion-navbar>
-
-</ion-header>
 <!-- 
 
     This form is linked to the variable account in the Authentication.ts file : [(ngModel)]
     This is the variable that put by default value.
 
  -->
-<ion-content id="authentificationContent" padding>
-    <p id="loginTitle">Qopius v.0.1</p>
-    <form (ngSubmit)="login()">
-        <ion-item>
-            <ion-label id="usernameLabel" for="username">Username</ion-label>
-            <ion-input  [(ngModel)]="account.username" id="username" name="username" type="string" required></ion-input>
-        </ion-item>
-        <ion-item >
-            <ion-label id="passwordLabel" for="password">Password</ion-label>
-            <ion-input  [(ngModel)]="account.password" id="password" name="password" type="password" required></ion-input>
-        </ion-item>
-        <button ion-button block type="submit">Login</button>
-    </form>
+<ion-content id="authentificationContent" padding scroll="false">
+    <ion-img src="https://static1.squarespace.com/static/55ab8f1fe4b031edd6fa0ed9/t/599ea390f7e0aba9e964b91f/1503990062200/?format=1500w" id="logo"></ion-img>
+    <ion-card class="card">
+        <form (ngSubmit)="login()">
+            <ion-item class="name">
+                <ion-label id="usernameLabel" for="username">Username</ion-label>
+                <ion-input [(ngModel)]="account.username" id="username" name="username" type="string" required></ion-input>
+            </ion-item>
+            <ion-item class="password">
+                <ion-label id="passwordLabel" for="password">Password</ion-label>
+                <ion-input [(ngModel)]="account.password" id="password" name="password" type="password" required></ion-input>
+            </ion-item>
+            <button ion-button block type="submit" class="loginButton">Login</button>
+        </form>
+    </ion-card>
 </ion-content>

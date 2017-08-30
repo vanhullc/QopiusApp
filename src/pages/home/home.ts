@@ -12,7 +12,7 @@ import { AlertDetailPage } from '../alertDetail/alertDetail';
 
 @Component({
     templateUrl: 'home.html',
-    selector: 'home.scss'
+    selector: 'page-home'
 })
 /* 
    This page is used to choose a toolkit
@@ -24,13 +24,15 @@ export class HomePage {
     private modal;
     issuesNumber;
     mode;
+    sort;
     tags = ["day", "week", "month", "extra_facing", "empty_slot", "out_of_stock", "misplaced_product"];
     _toolkit: any;
 
     constructor(private menu: MenuController, private modalCtrl: ModalController, private nav: NavController, private alertService: AlertService, private imageService: Image) {
         console.log("home/constructor");
         this.menu.enable(true);
-        this.mode = "";
+        this.mode = " ";
+        this.sort = "";
         this._toolkit = "y6W4gm";
         this.issuesNumber = 0;
         this.initialise();
@@ -50,7 +52,8 @@ export class HomePage {
     }
 
     initialiseAlert() {
-        this.mode = "";
+        this.mode = " ";
+        this.sort = "";
         this.alertService.getListAlert().subscribe(
             () => {
                 this.displayIssues = this.alertService.getListDisplayIssues();
@@ -61,7 +64,7 @@ export class HomePage {
     }
 
     openIssue(issue: DisplayIssue) {
-        if (this.mode != " archived") {
+        if (this.mode != " archived ") {
             console.log("home/openAlert(id:" + issue.issueID + ")");
             this.modal = this.modalCtrl.create(AlertDetailPage, { issue: issue });
             this.modal.onDidDismiss(
@@ -77,10 +80,12 @@ export class HomePage {
         console.log("Home/switchArchiveMode");
         this.displayIssues = this.alertService.getListDisplayArchivedIssues();
         this.issuesNumber = this.displayIssues.length;
-        this.mode = " archived";
+        this.mode = " archived ";
+        this.sort = "";
     }
 
     filterAlert(tag: any) {
+        this.sort = tag;
         if (tag === "day" || tag === "month" || tag === "week") {
             if (this.mode === " archived") {
                 this.displayIssues = this.alertService.filterArchivedByDate(tag);

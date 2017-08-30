@@ -14,3 +14,15 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+
+.header {
+    background-color: white;
+    font-family: Avenir-Medium;
+}
+
+.tab {
+    border: 0px;
+    font-family: Avenir-Medium;
+    font-size: 20px;
+    color: #515151;
+}

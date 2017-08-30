@@ -205,8 +205,8 @@ export class Image {
         console.log("service/getImage");
         var analysedImage: AnalysedImage;
         for (let i = 0; i < this._analyzedImage.length; i++) {
-            console.log(this._analyzedImage[i].imageName + " === " + imageName);
-            if (this._analyzedImage[i].imageName.indexOf(imageName) !== -1) {
+            console.log(this._analyzedImage[i].imageName + " === " + imageName)
+            if (this._analyzedImage[i].imageName === imageName) {
                 analysedImage = {
                     "missionID": this._analyzedImage[i].missionID,
                     "image": this._analyzedImage[i].image,
@@ -224,10 +224,9 @@ export class Image {
                         analysedImage.boxes.push(this._analyzedImage[i].boxes[boxID[j]]);
                     }
                 }
+                return analysedImage;
             }
         }
-        console.log(analysedImage.boxes);
-        return analysedImage;
     }
 
     saveTask(resp) {
