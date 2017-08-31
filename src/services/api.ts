@@ -3,7 +3,7 @@ import { Http, RequestOptions, URLSearchParams } from '@angular/http';
 import 'rxjs/add/operator/map';
 
 import { FileTransfer, FileTransferObject, FileUploadOptions } from '@ionic-native/file-transfer';
-
+import { File } from '@ionic-native/file';
 
 /**
  * Api is a generic REST Api handler. Set your API url first.
@@ -47,11 +47,9 @@ export class Api {
 
   postImage(body: any) {
 
-    let options :FileUploadOptions = {
-      fileKey: "file",
-      fileName: body.taskID + ".zip",
-      mimeType: "application/zip",
-      httpMethod: "POST",
+    let options = {
+      fileName: body.taskID + '.zip',
+      mimeType: 'application/zip'
       /*params: {
         accountID: body.accountID,
         session_password: body.session_password,
@@ -65,6 +63,7 @@ export class Api {
     let url = this.postImageUrl + "?accountID=" + body.accountID + "&session_password=" + body.session_password + "&toolkitID=" + body.toolkitID + "&taskID=" + body.taskID + "&mode=" + body.mode;
 
     console.log("api/postImage");
+    console.log(body.file);
     return this.fileTransfer.upload(body.file, url, options, true);
   }
 

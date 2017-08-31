@@ -2,11 +2,12 @@ import { ToastController, AlertController, NavController, MenuController } from 
 import { Component } from '@angular/core';
 
 import { Camera, CameraOptions } from '@ionic-native/camera';
-import { File } from '@ionic-native/file';
+import { File, FileReader } from '@ionic-native/file';
 
 import { Image } from '../../services/image';
 
 import JSzip from 'jszip';
+import JSZipUtils from 'jszip-utils';
 
 @Component({
   templateUrl: 'camera.html',
@@ -21,15 +22,15 @@ export class CameraPage {
   // selected toolkit number
   _toolkit: any;
   // array of new pics by the user
-  _images: any[] = [];
+  _images: string[] = [];
   // file path of the new zip
   _zip: any;
   // file path of the cache directory of the phone. Allow to write file on both iOS and Android
-  _cacheDirectory: any;
+  _memoryDirectory: any;
   options: CameraOptions;
 
   constructor(private menu: MenuController, private nav: NavController, private alert: AlertController, private file: File, private toast: ToastController, private camera: Camera, private imageService: Image) {
-    this._cacheDirectory = this.file.cacheDirectory;
+    this._memoryDirectory = this.file.externalCacheDirectory;
   }
 
   /*
@@ -42,69 +43,105 @@ export class CameraPage {
   savePicture() {
     this.zipPics(this._images).then(
       (content) => {
-
-        this.file.createFile(this._cacheDirectory, "Images.zip", true).then(
+        this.file.createFile(this._memoryDirectory, "Images.zip", true).then(
           (res) => {
-            console.log("zip file created");
-          }, 
-          (err) => {
-            console.error("ERROR: zip file not created: " + err);
-          });
-        this._zip = this._cacheDirectory + "Images.zip";
+            console.log("file created" + (JSON.stringify(res)));
+            this.file.writeExistingFile(this._memoryDirectory, "Images.zip", content).then(
+              (res) => {
+                console.log("zip file writed" + (JSON.stringify(res)));
 
-        this.imageService.getTask().subscribe(
-          (resp) => {
-            this.imageService.postTask().subscribe(
-              (resp) => {
-                this.imageService.uploadImage(this._zip).then(
+                this._zip = this._memoryDirectory + "Images.zip";
+                this.imageService.getTask().subscribe(
                   (resp) => {
-                    console.log("UploadImageDone");
+                    this.imageService.postTask().subscribe(
+                      (resp) => {
+                        this.imageService.uploadImage(this._zip).then(
+                          (resp) => {
+                            console.log("UploadImageDone");
+                            let toast = this.toast.create({
+                              message: 'UploadImageDone: ' + JSON.stringify(resp),
+                              duration: 3000,
+                              position: 'top'
+                            });
+                            toast.present();
+                          }, (err) => {
+                            console.error("camera/uploadImageError  " + JSON.stringify(err));
+                            let alert = this.alert.create({
+                              message: 'camera/uploadImageError: ' + JSON.stringify(err)
+                            });
+                            alert.present();
+                          });
+                      }, (err) => {
+                        console.error("camera/postTaskError: " + JSON.stringify(err));
+                        let toast = this.toast.create({
+                          message: 'camera/postTaskError',
+                          duration: 10000,
+                          position: 'top'
+                        });
+                        toast.present();
+                      });
+                  }, (err) => {
+                    console.error("camera/getTaskError: " + JSON.stringify(err));
                     let toast = this.toast.create({
-                      message: 'UploadImageDone: ' + JSON.stringify(resp),
-                      duration: 3000,
+                      message: 'camera/getTaskError',
+                      duration: 10000,
                       position: 'top'
                     });
                     toast.present();
-                  }, (err) => {
-                    console.error("camera/uploadImageError Code: " + err.code + " & source: " + err.source + " & target: " + err.target + " & message: " + err.message);
-                    let alert = this.alert.create({
-                      message: 'camera/uploadImageError: ' + JSON.stringify(err)
-                    });
-                    alert.present();
                   });
-              }, (err) => {
-                console.error("camera/postTaskError: " + JSON.stringify(err));
-                let toast = this.toast.create({
-                  message: 'camera/postTaskError',
-                  duration: 10000,
-                  position: 'top'
-                });
-                toast.present();
               });
-          }, (err) => {
-            console.error("camera/getTaskError: " + JSON.stringify(err));
-            let toast = this.toast.create({
-              message: 'camera/getTaskError',
-              duration: 10000,
-              position: 'top'
-            });
-            toast.present();
           });
+      },
+      (err) => {
+        console.error("ERROR: zip file not created: " + err);
       });
   }
   // Generate the zip file and return it to be written somewhere
   zipPics(files: any[]) {
+    console.log("camera/zipPIcs");
     let zip = new JSzip();
     for (let i = 0; i < files.length; i++) {
-      zip.file(files[i]);
+      console.log(i);
+      console.log(files[i]);
+      console.log(files[i].substr(63));
+      zip.file(i+'.jpg', files[i], {base64: true});
+      
+      /*
+      this.file.resolveDirectoryUrl(this._memoryDirectory).then(
+        (dirEntry) => {
+          this.file.getFile(dirEntry, files[i].substr(63), {}).then(
+            (data) => {
+              data.file(
+                (file) => {
+                  zip.file(i+'.jpg', file);
+                },
+                (err) => {
+                  console.log("error getting file : " + JSON.stringify(err));
+                  throw(err);
+                }
+              )
+            },
+            (err) => {
+              console.log("error getting file Entry : " + JSON.stringify(err));
+              throw(err);
+            }
+          );
+        },
+        (err) => {
+          console.log("error resolving Directory Url: " + JSON.stringify(err));
+          throw(err);
+        }
+      );
+      */
     }
     return zip.generateAsync({ "type": "blob" });
   }
+
   // Change camera options to add pic from library
   getLibraryPicture() {
     this.options = {
       quality: 100,
-      destinationType: this.camera.DestinationType.FILE_URI,
+      destinationType: this.camera.DestinationType.DATA_URL,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE,
       sourceType: this.camera.PictureSourceType.PHOTOLIBRARY
@@ -115,7 +152,7 @@ export class CameraPage {
   getCameraPicture() {
     this.options = {
       quality: 100,
-      destinationType: this.camera.DestinationType.FILE_URI,
+      destinationType: this.camera.DestinationType.DATA_URL,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE,
       sourceType: this.camera.PictureSourceType.CAMERA
@@ -141,8 +178,8 @@ export class CameraPage {
         toast.present();
       });
   }
-    toggleMenu() {
-        console.log("home/toggleMenu");
-        this.menu.toggle();
-    }
+  toggleMenu() {
+    console.log("home/toggleMenu");
+    this.menu.toggle();
+  }
 }
