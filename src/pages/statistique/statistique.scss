@@ -1,6 +1,125 @@
+//@import './table.scss';
+
 page-statistique {
-    background: auto;
-    .col {
-        width: 50%;
+    .scroll-content {
+        background-color: #ECF2F6;
     }
+    .navbar {
+    color: white;
+    height: 50px;
+    #logo {
+      height : 40px;
+      width: 40px;
+      margin-left: 40%;
+    }
+    ion-icon {
+      color: #29a6cc;
+    }
+  }
+    .dashboard-container {
+    .main-indicators-container{
+
+    .card {
+        border-radius: 8px;
+        margin-top: 3%;
+        box-shadow: 0 2px 30px 0 rgba(105, 105, 105, 0.4);
+        background: white;
+        ion-card-header {
+            font-family: Avenir-Heavy;
+            font-size: 25px;
+            color: #515151;
+        }
+        ion-card-content {
+            padding: 0px 0px 0px 0px;
+        }
+    }
+
+    .out-of-stock-chart-container,
+    .planogram-compliance-chart-container,
+    .share-of-shelf-chart-container {
+      width: 49%;
+      padding: 10px;
+      display: inline-block;
+      text-align: center;
+      position: relative;
+    }
+
+    .chart-data-infos {
+      position: absolute;
+      margin-top: 23%;
+      margin-left: 7%;
+      text-align: center;
+      font-family: Avenir-Medium;
+      font-size: 21px;
+      color: #8B8B8B;
+      letter-spacing: -1.15px;
+      width: 75%;
+
+      .data-status {
+        font-family: Avenir-Heavy;
+        font-size: 40px;
+        color: #CE0350;
+        letter-spacing: -1.48px;
+
+        &.planogram-compliance {
+          color: #114486;
+        }
+
+        &.share-of-shelf {
+          color: #335133;
+        }
+      }
+
+      .data-target {
+        a {
+          color: black;
+        }
+      }
+    }
+
+    .data-variation {
+      text-align: center;
+      font-family: Avenir-Medium;
+      font-size: 23px;
+      color: #8B8B8B;
+      letter-spacing: -1.15px;
+      margin-top: 10px;
+    }
+  }
+.proof-images-container {
+    .card {
+        border-radius: 8px;
+        margin-top: 3%;
+        box-shadow: 0 2px 30px 0 rgba(105, 105, 105, 0.4);
+        background: white;
+        ion-card-header {
+            font-family: Avenir-Heavy;
+            font-size: 25px;
+            color: #515151;
+        }
+        ion-card-content {
+            .images-captured-count {
+            text-align: center;
+            display: inline-block;
+            position: relative;
+            width: 49%;
+            h1 {
+                font-family: Avenir-Heavy;
+                font-size: 40px;
+                color: #114486;
+                letter-spacing: -1px;
+            }
+            h3 {
+                font-family: Avenir-Medium;
+                font-size: 20px;
+                color: #515151;
+                letter-spacing: -0.75px;
+                line-height: 20px;
+            }
+            }
+        }
+    }
+
+}
+}
 }

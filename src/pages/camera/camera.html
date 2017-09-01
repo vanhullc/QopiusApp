@@ -1,16 +1,20 @@
 <ion-header>
+  <ion-navbar color="white" class="navbar">
+    <ion-buttons left>
+      <button ion-button (click)="toggleMenu()">
+        <ion-icon color="#0079AD" name="menu"></ion-icon>
+    </button>
+    </ion-buttons>
+    <div id="logo" (click)="initialiseAlert()">
+			<img src="https://static1.squarespace.com/static/55ab8f1fe4b031edd6fa0ed9/t/599ea390f7e0aba9e964b91f/1503990062200/?format=1500w" />
+		</div>
+    <ion-buttons right>
+      <button ion-button (click)="savePicture()">
+          <ion-icon color="$primary" name="cloud-upload"></ion-icon>
+      </button>
+    </ion-buttons>
 
-	<ion-navbar color="primary">
-		<button ion-button (click)="toggleMenu()">
-        <ion-icon name="menu"></ion-icon>
-	  </button>
-		<ion-buttons right>
-			<button ion-button (click)="savePicture()">
-	    	<p>SAVE</p>	
-	    </button>
-		</ion-buttons>
-		<ion-title>Qopius</ion-title>
-	</ion-navbar>
+  </ion-navbar>
 
 </ion-header>
 

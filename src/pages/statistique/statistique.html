@@ -1,51 +1,125 @@
 <ion-header>
-  <ion-navbar color="primary">
-    <button ion-button (click)="toggleMenu()">
-        <ion-icon name="menu"></ion-icon>
-	    </button>
-    <ion-title center>Qopius</ion-title>
+  <ion-navbar color="white" class="navbar">
+    <ion-buttons left>
+      <button ion-button (click)="toggleMenu()">
+        <ion-icon color="#0079AD" name="menu"></ion-icon>
+    </button>
+    </ion-buttons>
+    <div id="logo">
+      <img src="https://static1.squarespace.com/static/55ab8f1fe4b031edd6fa0ed9/t/599ea390f7e0aba9e964b91f/1503990062200/?format=1500w"
+      />
+    </div>
+
   </ion-navbar>
 
 </ion-header>
 
 <ion-content class="dashboard-container">
-  <ion-grid>
-    <ion-row>
-      <ion-col col-6>
-        <h5>Out of stock</h5>
-        <canvas baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels" [chartType]="doughnutChartType" [options]="doughnutChartOptions"
-                        [colors]="doughnutChartColors" (chartClick)="openReportPage()"></canvas>
-      </ion-col>
-      <ion-col col-6>
-        <h5>Plano Comp</h5>
-        <canvas baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels" [chartType]="doughnutChartType" [options]="doughnutChartOptions"
-                            [colors]="doughnutChartColors"></canvas>
-        </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col col-6>
-        <h5>Share of shelf</h5>
-        <canvas baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels" [chartType]="doughnutChartType" [options]="doughnutChartOptions"
-                                [colors]="doughnutChartColors"></canvas>
-      </ion-col>
-      <ion-col col-6>
-        <h5>Price Comp</h5>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-        <h5>Out of stock rank</h5>
-        <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend"
-                            [chartType]="barChartType" [colors]="barChartColors"></canvas>
-    </ion-row>
-    <ion-row>
-        <h5>Compliance rank</h5>
-        <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend"
-                            [chartType]="barChartType" [colors]="barChartColors"></canvas>
-    </ion-row>
-      <ion-row>
-        <h5>Share of shelf rank</h5>
-        <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend"
-                            [chartType]="barChartType" [colors]="barChartColors"></canvas>
-    </ion-row>
-  </ion-grid>
+  <div class="main-indicators-container" *ngIf="analytics && (outOfStockPercentage || planogramCompliancePercentage || shareOfShelfPercentage)">
+    <ion-card>
+      <ion-card-header>
+        Main indicators
+      </ion-card-header>
+      <ion-card-content>
+        <div class="out-of-stock-chart-container chart" *ngIf="outOfStockPercentage">
+          <div class="chart-data-infos">
+            <div class="data-title">
+              Out of stock
+            </div>
+            <div class="data-status">
+              {{ outOfStockPercentage }}%
+            </div>
+          </div>
+          <canvas baseChart [data]="outOfStockdoughnutChartData" [labels]="outOfStockdoughnutChartLabels" [chartType]="doughnutChartType"
+            [options]="doughnutChartOptions" [colors]="outOfStockDoughnutChartColors"></canvas>
+          <!--<div class="data-variation">
+        <span class="fa fa-caret-down"></span>  6.5%
+      </div>-->
+        </div>
+        <div class="planogram-compliance-chart-container chart" *ngIf="planogramCompliancePercentage">
+          <div class="chart-data-infos">
+            <div class="data-title">
+              Plano comp.
+            </div>
+            <div class="data-status planogram-compliance">
+              {{ planogramCompliancePercentage }}%
+            </div>
+          </div>
+          <canvas baseChart [data]="planogramCompliancedoughnutChartData" [labels]="planogramCompliancedoughnutChartLabels" [chartType]="doughnutChartType"
+            [options]="doughnutChartOptions" [colors]="planogramComplianceDoughnutChartColors"></canvas>
+          <!--<div class="data-variation">
+        <span class="fa fa-caret-down"></span>  6.5%
+      </div>-->
+        </div>
+        <div class="share-of-shelf-chart-container chart" *ngIf="shareOfShelfPercentage">
+          <div class="chart-data-infos">
+            <div class="data-title">
+              Share of shelf
+            </div>
+            <div class="data-status share-of-shelf">
+              {{ shareOfShelfPercentage }} %
+            </div>
+          </div>
+          <canvas baseChart [data]="shareOfShelfdoughnutChartData" [labels]="shareOfShelfdoughnutChartLabels" [chartType]="doughnutChartType"
+            [options]="doughnutChartOptions" [colors]="shareOfShelfDoughnutChartColors"></canvas>
+          <!--<div class="data-variation">
+        <span class="fa fa-caret-up"></span>  12.3%
+      </div>-->
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <div class="proof-images-container" *ngIf="analytics && (outOfStockPercentage || planogramCompliancePercentage || shareOfShelfPercentage)">
+    <ion-card>
+      <ion-card-header>
+        Countings
+      </ion-card-header>
+      <ion-card-content>
+        <div class="images-captured-count">
+          <h1>219</h1>
+          <br />
+          <h3>Images captured</h3>
+        </div>
+        <div class="images-captured-count">
+          <h1>69</h1>
+          <br />
+          <h3>Alerts generated</h3>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+<!--
+  <table class="table table-striped">
+    <thead class="thead-inverse">
+    <tr>
+      <th>Product name</th>
+      <th>Out of stock</th>
+      <th>Price</th>
+      <th>Planogram</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Mark</td>
+      <td>Otto</td>
+      <td>@mdo</td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>Jacob</td>
+      <td>Thornton</td>
+      <td>@fat</td>
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td>Larry</td>
+      <td>the Bird</td>
+      <td>@twitter</td>
+    </tr>
+    </tbody>
+  </table>
+-->
+
 </ion-content>

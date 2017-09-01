@@ -21,6 +21,10 @@ import { User } from '../services/user';
 import { Settings } from '../services/settings';
 import { Image } from '../services/image';
 import { AlertService } from '../services/alert';
+import { Analytics } from '../services/analytics';
+import { Locations } from '../services/locations';
+import { Missions } from '../services/missions';
+import { Labels } from '../services/labels';
 
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -80,6 +84,10 @@ export function provideSettings(storage: Storage) {
     AlertService,
     User,
     Image,
+    Analytics,
+    Locations,
+    Missions,
+    Labels,
     File,
     FileTransfer,
     Camera, 
