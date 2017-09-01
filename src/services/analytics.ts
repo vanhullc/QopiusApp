@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { Http, RequestOptions, Headers } from '@angular/http';
 
 import { User } from './user';
+import { Api } from './api';
 
 @Injectable()
 export class Analytics {
     getAnalyticsUrl = 'https://apiqube.com/debug/analytics';
 
-    constructor(private http: Http, private user: User) { }
+    constructor(private api: Api, private http: Http, private user: User) { }
 
     getAnalytics(locationId: string, toolkitId: string, missionId: string, startDate?: string, endDate?: string) {
         const accountId = this.user._user.accountID;
@@ -54,7 +55,7 @@ export class Analytics {
 
         console.log('url to get', urlToGet);
 
-        let seq = this.http.get(urlToGet).share()
+        let seq = this.api.get(urlToGet).share()
 
         seq
             .map(res => res.json())

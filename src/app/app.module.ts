@@ -14,9 +14,9 @@ import { ImageDetailPage } from '../pages/imageDetail/imageDetail';
 import { CanvasPage } from '../pages/canvas/canvas';
 import { HomePage } from '../pages/home/home';
 import { AuthenticationPage } from '../pages/authentication/authentication';
+import { LocationListPage } from '../pages/locationList/locationList';
 
 import { Api } from '../services/api';
-import { Chart } from '../services/chart';
 import { User } from '../services/user';
 import { Settings } from '../services/settings';
 import { Image } from '../services/image';
@@ -57,7 +57,8 @@ export function provideSettings(storage: Storage) {
     ImageDetailPage,
     CanvasPage,
     HomePage,
-    AuthenticationPage
+    AuthenticationPage,
+    LocationListPage
   ],
   imports: [
     BrowserModule,
@@ -76,11 +77,11 @@ export function provideSettings(storage: Storage) {
     ImageDetailPage,
     CanvasPage,
     AuthenticationPage,
-    HomePage
+    HomePage,
+    LocationListPage
   ],
   providers: [
     Api,
-    Chart,
     AlertService,
     User,
     Image,

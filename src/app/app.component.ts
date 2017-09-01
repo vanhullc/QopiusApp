@@ -14,6 +14,7 @@ import { ImageDetailPage } from '../pages/imageDetail/imageDetail';
 import { CanvasPage } from '../pages/canvas/canvas';
 import { HomePage } from '../pages/home/home';
 import { AuthenticationPage } from '../pages/authentication/authentication';
+import { LocationListPage } from '../pages/locationList/locationList';
 //Load Services
 import { Settings } from '../services/settings';
 
@@ -23,6 +24,7 @@ import { Settings } from '../services/settings';
 
 export class MyApp {
   rootPage:any = FirstRunPage;
+  
 
   @ViewChild(Nav) nav: Nav;
 
@@ -41,7 +43,8 @@ export class MyApp {
     {title: 'ImageDetail', component: ImageDetailPage},
     {title: 'Canvas', component: CanvasPage},
     {title: 'Home', component: HomePage},
-    {title: 'Authentication', component: AuthenticationPage}
+    {title: 'Authentication', component: AuthenticationPage},
+    {title: 'LocationList', component: LocationListPage}
   ];
 
   constructor(private platform: Platform, settings: Settings, private statusBar: StatusBar, private splashScreen: SplashScreen) {

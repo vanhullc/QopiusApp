@@ -134,9 +134,9 @@ export class AlertService {
     saveAlert(res) {
         this.listAlert = [];
         let tempAlert: Alert;
-        for (let i = 0; i < res.length; i++) {
+        for (let i = 0; i < res["alerts"].length; i++) {
             //console.log("DEBUG: " + res[i].missionID + res[i].text + res[i].companyID + res[i].trigger_time + res[i].locationID + res[i].issues);
-            tempAlert = res[i];
+            tempAlert = res["alerts"][i];
             this.listAlert.push(tempAlert);
         }
         console.log("alertService/saveAlert/length : " + this.listAlert.length);

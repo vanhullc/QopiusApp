@@ -1,8 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
-import { MenuController, NavController } from 'ionic-angular';
+import { Component, ViewChild, ElementRef } from '@angular/core';
+import { MenuController, NavController, PopoverController } from 'ionic-angular';
 
 import { ReportPage } from '../report/report';
 import { HomePage } from '../home/home';
+import { LocationListPage } from '../locationList/locationList';
 
 import { Analytics } from '../../services/analytics';
 import { Missions } from '../../services/missions';
@@ -18,6 +19,8 @@ import Chart from 'chart.js';
 })
 
 export class StatistiquePage {
+
+    @ViewChild('popoverContent', { read: ElementRef }) content: ElementRef;
 
     public doughnutChartLabels: string[] = ['Out of stock', 'Total products'];
     public outOfStockdoughnutChartLabels: string[] = ['Out of stock', 'Total products'];
@@ -36,6 +39,7 @@ export class StatistiquePage {
     public shareOfShelfDoughnutChartColors: any = [{ backgroundColor: ["#335133", "#DBDBDB"] }];
 
     locations: any;
+    locationNames: any;
     locationID: any;
     labels: any;
     missions: any;
@@ -52,7 +56,9 @@ export class StatistiquePage {
     currentStartDate: string;
     currentEndDate: string;
 
-    constructor(private menu: MenuController, private nav: NavController, private userService: User, private analyticsService: Analytics, private missionService: Missions, private locationService: Locations, private labelService: Labels) {
+    constructor(private menu: MenuController, private nav: NavController, private userService: User, 
+        private analyticsService: Analytics, private missionService: Missions, private locationService: Locations, 
+        private labelService: Labels, private popoverCtrl: PopoverController) {
         this.menu.enable(true);
         this.locationID = "Es4bGvNFPL";
         this.toolkitID = "y6W4gm";
@@ -65,6 +71,9 @@ export class StatistiquePage {
                 this.locations = res.json();
                 // all locations selected
                 this.currentLocationList = this.locations;
+
+                this.getLocationLabels();
+                this.switchLocation();
 
                 this.missionService.getAllMissions()
                     .subscribe(res => {
@@ -93,6 +102,24 @@ export class StatistiquePage {
             });
     }
 
+    locationSelected(location) {
+        console.log('--> location', location);
+
+        this.currentLocationList = location;
+
+        /**
+         * Store location in localStorage so User doesn't have to type it down again
+         * localStorage.setItem('qopius_dashboard_location', JSON.stringify(location));
+         */
+
+        if (this.currentLocationList.length > 0) {
+            this.fetchAnalytics()
+        }
+        else {
+            this.analytics = null;
+        }
+    }
+
     fetchAnalytics() {
         console.log("statistiquesPage/fetchAnalytics");
         this.analyticsService.getAnalytics(this.locationID,
@@ -110,9 +137,9 @@ export class StatistiquePage {
                 const location = this.currentLocationList;
 
                 outOfStock = this.analytics['analytics']['root_label']['o'];
-                    facings = this.analytics['analytics']['root_label']['f'];
-                    productShareOfShelf = this.analytics['analytics']['root_label']['p'];
-                    planogramCompliance = this.analytics['analytics']['root_label']['r'];
+                facings = this.analytics['analytics']['root_label']['f'];
+                productShareOfShelf = this.analytics['analytics']['root_label']['p'];
+                planogramCompliance = this.analytics['analytics']['root_label']['r'];
                 /* Ready when multiple selection would be possible
                 if (location.length === 1) {
                     outOfStock = this.analytics['analytics']['root_label']['o'];
@@ -149,7 +176,41 @@ export class StatistiquePage {
                 this.planogramCompliancedoughnutChartData = [planogramCompliance * 100, 100 - (planogramCompliance * 100)];
                 this.planogramCompliancePercentage = Math.floor(planogramCompliance * 100);
             }
-            );
+        );
+    }
+
+    
+
+    getLocationLabels() {
+        this.locationNames = [];
+
+        const storeLocations = this.locations[Object.keys(this.locations)[0]]['children'];
+        const storeLocationsArray = Object.keys(storeLocations).map(function (key) { return storeLocations[key]; });
+        for (let i = 0; i < storeLocationsArray.length; i++) {
+          const storeLocation = storeLocationsArray[i];
+          const name = storeLocation['name'];
+          /**
+           * Push new locations to array
+           */
+          this.locationNames.push({id: Object.keys(storeLocations)[i], title: name});
+
+          if (storeLocation['children']) {
+            for (let j = 0; j < Object.keys(storeLocation['children']).length; j++) {
+                const childLocationId = Object.keys(storeLocation['children'])[j];
+                const childLocation = storeLocation['children'][childLocationId];
+
+                this.locationNames.push({id: childLocationId, title: childLocation['name']});
+            }
+          }
+      }
+    }
+
+    switchLocation() {
+        let popover = this.popoverCtrl.create(LocationListPage, {
+            locationList: this.locationNames,
+            locations: this.locations
+        });
+        popover.present();
     }
 
     toggleMenu() {
