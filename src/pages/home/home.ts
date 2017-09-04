@@ -1,8 +1,9 @@
 import { ModalController, NavController, MenuController } from 'ionic-angular';
 import { Component } from '@angular/core';
 
-import { AlertService } from '../../services/alert';
-import { Image } from '../../services/image';
+import { AlertService } from '../../services/alert.service';
+import { ImageService } from '../../services/image.service';
+import { LocationService } from '../../services/location.service';
 
 import { Alert } from '../../models/alert';
 import { Issue } from '../../models/issue';
@@ -22,15 +23,23 @@ import { AlertDetailPage } from '../alertDetail/alertDetail';
 export class HomePage {
     private displayIssues: DisplayIssue[];
     private modal;
+    locationName = "undefined";
     issuesNumber;
     mode;
     sort;
     tags = ["day", "week", "month", "extra_facing", "empty_slot", "out_of_stock", "misplaced_product"];
     _toolkit: any;
 
-    constructor(private menu: MenuController, private modalCtrl: ModalController, private nav: NavController, private alertService: AlertService, private imageService: Image) {
+    constructor(
+        private menuCtrl: MenuController,
+        private modalCtrl: ModalController,
+        private navCtrl: NavController,
+        private alertService: AlertService,
+        private imageService: ImageService,
+        private locationService: LocationService
+    ) {
         console.log("home/constructor");
-        this.menu.enable(true);
+        this.menuCtrl.enable(true);
         this.mode = " ";
         this.sort = "";
         this._toolkit = "y6W4gm";
@@ -40,30 +49,38 @@ export class HomePage {
 
     toggleMenu() {
         console.log("home/toggleMenu");
-        this.menu.toggle();
+        this.menuCtrl.toggle();
     }
 
     initialise() {
+        console.log("home/initialise");
         this.imageService.getAnalysedImages(this._toolkit).subscribe(
             () => {
-                this.initialiseAlert();
+                this.locationService.getAllLocations().subscribe(
+                    () => {
+                        this.locationName = this.locationService.getLocationName(this.locationService.getLocationID());
+                        this.initialiseAlert();                        
+                    }
+                )
             }
         );
     }
 
     initialiseAlert() {
+        console.log("home/initialiseAlert");
         this.mode = " ";
         this.sort = "";
         this.alertService.getListAlert().subscribe(
             () => {
                 this.displayIssues = this.alertService.getListDisplayIssues();
                 this.issuesNumber = this.displayIssues.length;
-                console.log("InitialiseAlert/length : " + this.displayIssues.length);
+                console.log("InitialiseAlert/length of displayIssues : " + this.displayIssues.length);
             }
         );
     }
 
     openIssue(issue: DisplayIssue) {
+        console.log("home/openIssue");
         if (this.mode != " archived ") {
             console.log("home/openAlert(id:" + issue.issueID + ")");
             this.modal = this.modalCtrl.create(AlertDetailPage, { issue: issue });
@@ -77,7 +94,7 @@ export class HomePage {
     }
 
     switchArchiveMode() {
-        console.log("Home/switchArchiveMode");
+        console.log("home/switchArchiveMode");
         this.displayIssues = this.alertService.getListDisplayArchivedIssues();
         this.issuesNumber = this.displayIssues.length;
         this.mode = " archived ";
@@ -85,6 +102,7 @@ export class HomePage {
     }
 
     filterAlert(tag: any) {
+        console.log("home/filterAlert");
         this.sort = tag;
         if (tag === "day" || tag === "month" || tag === "week") {
             if (this.mode === " archived") {

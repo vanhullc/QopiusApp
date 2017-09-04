@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 
 import { HomePage } from '../home/home';
 
-import { User } from '../../services/user';
+import { UserService } from '../../services/user.service';
 
 @Component({
   templateUrl: 'authentication.html',
@@ -25,9 +25,13 @@ export class AuthenticationPage {
     password: 'xlYlkeRCH4'
   };
 
-  private loginErrorString: "Login error"
+  private loginErrorString: "Login error";
 
-  constructor(public toastCtrl: ToastController, public nav: NavController, public userService: User) {
+  constructor(
+    public toastCtrl: ToastController,
+    public nav: NavController,
+    public userService: UserService
+    ) {
     this.image = "C:\Users\cyril\Documents\Stage_QOPIUS\QopiusApp\resources\logo.png";
   }
 

@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Http, RequestOptions, Headers } from '@angular/http';
 
-import { User } from './user';
+import { UserService } from './user.service';
 @Injectable()
-export class Labels {
+export class LabelService {
     getLabelsUrl = 'https://apiqube.com/debug/label';
 
-    constructor(private http: Http, private user: User) { }
+    constructor(
+        private http: Http,
+         private user: UserService
+        ) { }
 
     getAllLabels() {
         const accountId = this.user._user.accountID;

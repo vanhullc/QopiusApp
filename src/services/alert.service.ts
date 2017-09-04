@@ -5,15 +5,16 @@ import { Issue } from '../models/issue';
 import { Type } from '../models/type';
 import { DisplayIssue } from '../models/displayIssue';
 
-import { Api } from '../services/api';
+import { ApiService } from '../services/api.service';
 
 import { Http } from '@angular/http';
-import { User } from '../services/user';
-import { Image } from '../services/image';
+import { UserService } from '../services/user.service';
+import { ImageService } from '../services/image.service';
 
 @Injectable()
 
 export class AlertService {
+
     listAlert: Alert[];
     listDisplayIssues: DisplayIssue[];
     listArchivedDisplayIssues: DisplayIssue[];
@@ -21,7 +22,12 @@ export class AlertService {
     locationID: string = "Es4bGvNFPL";
     missionID: string = "oPerGdf345";
 
-    constructor(public http: Http, public api: Api, public user: User, private imageService: Image) {
+    constructor(
+        public http: Http,
+         public api: ApiService,
+          public user: UserService,
+           private imageService: ImageService
+        ) {
         this.initialise();
     }
 
@@ -38,7 +44,6 @@ export class AlertService {
             locationID: this.locationID,
             missionID: this.missionID,
             timeDelta: 10000000
-            //companyID: "ISHJJh"
         }
 
         let seq = this.api.get('alert', body).share();
@@ -134,25 +139,29 @@ export class AlertService {
     saveAlert(res) {
         this.listAlert = [];
         let tempAlert: Alert;
-        for (let i = 0; i < res["alerts"].length; i++) {
+        for (let i = 0; i < res.alerts.length; i++) {
             //console.log("DEBUG: " + res[i].missionID + res[i].text + res[i].companyID + res[i].trigger_time + res[i].locationID + res[i].issues);
-            tempAlert = res["alerts"][i];
+            tempAlert = res.alerts[i];
             this.listAlert.push(tempAlert);
         }
         console.log("alertService/saveAlert/length : " + this.listAlert.length);
     }
 
     getListDisplayIssues() {
+        console.log("AlertService/getListDisplayIssues");
         this.listDisplayIssues = [];
         let displayIssue: DisplayIssue;
         let product: any;
         let boxID: number[];
         for (let i = 0; i < this.listAlert.length; i++) {
             // CHANGE IN PENDING WHEN TEST IS OVER
-            if (this.listAlert[i].status === "error" || this.listAlert[i].status === "pending") {
+            if (this.listAlert[i].status === "error" || this.listAlert[i].status === "pending" || this.listAlert[i].status === "Dismissed") {
                 for (let j = 0; j < this.listAlert[i].issues.length; j++) {
                     boxID = [];
-                    if (this.listAlert[i].issues[j].status === "pending" || this.listAlert[i].issues[j].status === "error") {
+                    if (this.listAlert[i].issues[j].status === "pending" || 
+                        this.listAlert[i].issues[j].status === "error" ||
+                        this.listAlert[i].issues[j].status === "Dismissed"
+                    ) {
                         if (this.listAlert[i].issues[j].type[0]) {
                             product = "";
                             for (let k = 0; k < this.listAlert[i].issues[j].type.length; k++) {
@@ -200,7 +209,7 @@ export class AlertService {
         for (let i = 0; i < this.listAlert.length; i++) {
             for (let j = 0; j < this.listAlert[i].issues.length; j++) {
                 boxID = [];
-                if (this.listAlert[i].issues[j].status === "completed") {
+                if (this.listAlert[i].issues[j].status === "Completed") {
                     product = "";
                     if (this.listAlert[i].issues[j].name) {
                         product = this.listAlert[i].issues[j].name;

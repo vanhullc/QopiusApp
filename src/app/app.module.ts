@@ -16,36 +16,24 @@ import { HomePage } from '../pages/home/home';
 import { AuthenticationPage } from '../pages/authentication/authentication';
 import { LocationListPage } from '../pages/locationList/locationList';
 
-import { Api } from '../services/api';
-import { User } from '../services/user';
-import { Settings } from '../services/settings';
-import { Image } from '../services/image';
-import { AlertService } from '../services/alert';
-import { Analytics } from '../services/analytics';
-import { Locations } from '../services/locations';
-import { Missions } from '../services/missions';
-import { Labels } from '../services/labels';
+import { ApiService } from '../services/api.service';
+import { UserService } from '../services/user.service';
+import { ImageService } from '../services/image.service';
+import { AlertService } from '../services/alert.service';
+import { AnalyticService } from '../services/analytic.service';
+import { LocationService } from '../services/location.service';
+import { MissionService } from '../services/mission.service';
+import { LabelService } from '../services/label.service';
+import { ZipService } from '../services/zip.service';
 
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { Camera } from '@ionic-native/camera';
 import { File } from '@ionic-native/file';
 import { FileTransfer } from '@ionic-native/file-transfer';
+import { Base64 } from '@ionic-native/base64';
 import { ChartsModule } from 'ng2-charts/charts/charts';
 import '../../node_modules/chart.js/dist/Chart.bundle.min.js';
-
-export function provideSettings(storage: Storage) {
-  /**
-   * The Settings provider takes a set of default settings for your app.
-   *
-   * You can add new settings options at any time. Once the settings are saved,
-   * these values will not overwrite the saved values (this can be done manually if desired).
-   */
-  return new Settings(storage, {
-    test: "test",
-    test2: "test"
-  });
-}
 
 @NgModule({
   declarations: [
@@ -81,20 +69,21 @@ export function provideSettings(storage: Storage) {
     LocationListPage
   ],
   providers: [
-    Api,
+    ApiService,
     AlertService,
-    User,
-    Image,
-    Analytics,
-    Locations,
-    Missions,
-    Labels,
+    UserService,
+    ImageService,
+    AnalyticService,
+    LocationService,
+    MissionService,
+    LabelService,
+    ZipService,
     File,
+    Base64,
     FileTransfer,
     Camera, 
     StatusBar,
     SplashScreen,
-    { provide: Settings, useFactory: provideSettings, deps: [Storage] },
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 }) 

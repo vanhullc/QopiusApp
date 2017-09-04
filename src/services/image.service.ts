@@ -5,8 +5,8 @@ import { Box } from '../models/qopiusBox';
 
 import { FileUploadResult } from '@ionic-native/file-transfer';
 
-import { Api } from '../services/api';
-import { User } from '../services/user';
+import { ApiService } from '../services/api.service';
+import { UserService } from '../services/user.service';
 
 import { Http } from '@angular/http';
 
@@ -15,7 +15,7 @@ import 'rxjs/Rx';
 
 @Injectable()
 
-export class Image {
+export class ImageService {
     _analyzedImage: AnalysedImage[];
     _images: String[];
     _taskID: String;
@@ -26,14 +26,16 @@ export class Image {
     task_mode: String = "prod";
 
 
-    constructor(public http: Http, public api: Api, public user: User) {
+    constructor(
+        public http: Http,
+         public api: ApiService,
+          public user: UserService
+        ) {
         this.http = http;
         this.api = api;
         this.user = user;
         this._toolkit = "y6W4gm";
     }
-
-
 
     getTask() {// Get taskID. Used to post image for example
         console.log("service/getTask");

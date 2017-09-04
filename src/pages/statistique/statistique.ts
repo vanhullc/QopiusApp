@@ -5,11 +5,11 @@ import { ReportPage } from '../report/report';
 import { HomePage } from '../home/home';
 import { LocationListPage } from '../locationList/locationList';
 
-import { Analytics } from '../../services/analytics';
-import { Missions } from '../../services/missions';
-import { Locations } from '../../services/locations';
-import { Labels } from '../../services/labels';
-import { User } from '../../services/user';
+import { AnalyticService } from '../../services/analytic.service';
+import { MissionService } from '../../services/mission.service';
+import { LocationService } from '../../services/location.service';
+import { LabelService } from '../../services/label.service';
+import { UserService } from '../../services/user.service';
 
 import Chart from 'chart.js';
 
@@ -19,8 +19,6 @@ import Chart from 'chart.js';
 })
 
 export class StatistiquePage {
-
-    @ViewChild('popoverContent', { read: ElementRef }) content: ElementRef;
 
     public doughnutChartLabels: string[] = ['Out of stock', 'Total products'];
     public outOfStockdoughnutChartLabels: string[] = ['Out of stock', 'Total products'];
@@ -56,10 +54,17 @@ export class StatistiquePage {
     currentStartDate: string;
     currentEndDate: string;
 
-    constructor(private menu: MenuController, private nav: NavController, private userService: User, 
-        private analyticsService: Analytics, private missionService: Missions, private locationService: Locations, 
-        private labelService: Labels, private popoverCtrl: PopoverController) {
-        this.menu.enable(true);
+    constructor(
+        private menuCtrl: MenuController,
+        private navCtrl: NavController,
+        private userService: UserService, 
+        private analyticsService: AnalyticService,
+        private missionService: MissionService,
+        private locationService: LocationService, 
+        private labelService: LabelService,
+        private popoverCtrl: PopoverController
+    ) {
+        this.menuCtrl.enable(true);
         this.locationID = "Es4bGvNFPL";
         this.toolkitID = "y6W4gm";
     }
@@ -73,7 +78,6 @@ export class StatistiquePage {
                 this.currentLocationList = this.locations;
 
                 this.getLocationLabels();
-                this.switchLocation();
 
                 this.missionService.getAllMissions()
                     .subscribe(res => {
@@ -98,7 +102,7 @@ export class StatistiquePage {
                             );
                     });
             }, err => {
-                this.nav.setRoot(HomePage)
+                this.navCtrl.setRoot(HomePage)
             });
     }
 
@@ -215,10 +219,10 @@ export class StatistiquePage {
 
     toggleMenu() {
         console.log("home/toggleMenu");
-        this.menu.toggle();
+        this.menuCtrl.toggle();
     }
 
     openReportPage() {
-        this.nav.push(ReportPage);
+        this.navCtrl.push(ReportPage);
     }
 }

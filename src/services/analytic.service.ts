@@ -1,14 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Http, RequestOptions, Headers } from '@angular/http';
 
-import { User } from './user';
-import { Api } from './api';
+import { UserService } from './user.service';
+import { ApiService } from './api.service';
 
 @Injectable()
-export class Analytics {
+export class AnalyticService {
     getAnalyticsUrl = 'https://apiqube.com/debug/analytics';
 
-    constructor(private api: Api, private http: Http, private user: User) { }
+    constructor(private api: ApiService,
+         private http: Http,
+          private user: UserService
+        ) { }
 
     getAnalytics(locationId: string, toolkitId: string, missionId: string, startDate?: string, endDate?: string) {
         const accountId = this.user._user.accountID;

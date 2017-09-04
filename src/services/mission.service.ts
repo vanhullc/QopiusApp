@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Http, RequestOptions, Headers } from '@angular/http';
 
-import { User } from './user';
+import { UserService } from './user.service';
 
 @Injectable()
-export class Missions {
+export class MissionService {
     getAllMissionsUrl = 'https://apiqube.com/debug/mission';
 
-    constructor(private http: Http, private user: User) { }
+    constructor(
+        private http: Http,
+         private user: UserService
+        ) { }
 
     getMissionID() {
         return "oPerGdf345";

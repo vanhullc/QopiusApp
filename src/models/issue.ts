@@ -5,4 +5,5 @@ export class Issue {
     type: Type[];
     feedback: string;
     name: string;
+    cat: string[];
 }

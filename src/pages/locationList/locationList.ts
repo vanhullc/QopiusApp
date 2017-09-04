@@ -9,9 +9,10 @@ import { PopoverController, NavParams } from 'ionic-angular';
 export class LocationListPage {
     locationList; any;
 
-    constructor(private navParams: NavParams) {
-        this.locationList = this.navParams.get("locationList");
-        
+    constructor(
+        private navParams: NavParams
+    ) {
+        this.locationList = this.navParams.get("locationList"); 
     }
 
 }

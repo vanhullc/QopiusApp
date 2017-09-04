@@ -7,8 +7,8 @@ import { AnalysedImage } from '../../models/analysedImage';
 import { Observable } from 'rxjs/Rx';
 import { Subscription } from 'rxjs/Subscription';
 
-import { AlertService } from '../../services/alert';
-import { Image } from '../../services/image';
+import { AlertService } from '../../services/alert.service';
+import { ImageService } from '../../services/image.service';
 
 @Component({
     templateUrl: 'alertDetail.html',
@@ -24,7 +24,13 @@ export class AlertDetailPage {
     visible: boolean = true;
     boxStyle;
 
-    constructor(private alertCtrl: AlertController, private navParams: NavParams, private nav: NavController, private alertService: AlertService, private imageService: Image) {
+    constructor(
+        private alertCtrl: AlertController,
+        private navParams: NavParams,
+        private nav: NavController,
+        private alertService: AlertService,
+        private imageService: ImageService
+        ) {
         this.issue = this.navParams.get("issue");
         this.image = this.alertService.getIssueAnalysedImage(this.issue.image_name, this.issue.boxID);
         console.log("BOOOOOOOOOOOOOOOOOXID ===== "+this.issue.boxID);

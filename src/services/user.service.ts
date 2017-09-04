@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { qopiusUser } from '../models/qopiusUser';
 
-import { Api } from '../services/api';
+import { ApiService } from '../services/api.service';
 
 import { Http } from '@angular/http';
 
@@ -11,13 +11,16 @@ import 'rxjs/Rx';
 
 @Injectable()
 
-export class User {
+export class UserService {
   _user: qopiusUser;
 
 
-  constructor(public http: Http, public api: Api) {
-    this.http = http;
-    this.api = api;
+  constructor(
+    public http: Http,
+    public api: ApiService
+    ) {
+      this.http = http;
+      this.api = api;
   }
 
   //******************************************************************************
@@ -38,7 +41,7 @@ export class User {
       .subscribe(res => {
         // If the API returned a successful response, mark the user as logged in
         // Success if user info returned. Else error.
-        if (res.toolkits) {
+        if (!res.error) {
           this._loggedIn(res);
         }
         else {
@@ -60,7 +63,7 @@ export class User {
    * Process a login/signup response to store user data
    * Response JSON is user information
    */
-  _loggedIn(resp) {
+  private _loggedIn(resp) {
     this.initUser();
     this._user = resp;
     console.log("toolkits :" + this._user.toolkits.toString());

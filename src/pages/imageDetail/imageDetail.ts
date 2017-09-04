@@ -7,7 +7,7 @@ import { Box } from '../../models/qopiusBox';
 import { Observable } from 'rxjs/Rx';
 import { Subscription } from 'rxjs/Subscription';
 
-import { Image } from '../../services/image';
+import { ImageService } from '../../services/image.service';
 
 @Component({
     templateUrl: 'imageDetail.html',
@@ -22,7 +22,12 @@ export class ImageDetailPage {
     visible: boolean = true;
 
 
-    constructor(private platform: Platform, private nav: NavController, private navParam: NavParams, private imageService: Image) {
+    constructor(
+        private platform: Platform,
+        private navCtrl: NavController,
+        private navParam: NavParams,
+        private imageService: ImageService
+    ) {
         console.log("imageDetailPage.ts/Constructor");
         this.initialise();
     }
@@ -65,6 +70,6 @@ export class ImageDetailPage {
     }
     
     close() {
-        this.nav.pop();
+        this.navCtrl.pop();
     }
 }

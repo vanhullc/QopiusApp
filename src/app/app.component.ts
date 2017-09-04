@@ -16,7 +16,6 @@ import { HomePage } from '../pages/home/home';
 import { AuthenticationPage } from '../pages/authentication/authentication';
 import { LocationListPage } from '../pages/locationList/locationList';
 //Load Services
-import { Settings } from '../services/settings';
 
 @Component({
   templateUrl: 'app.html'
@@ -47,8 +46,11 @@ export class MyApp {
     {title: 'LocationList', component: LocationListPage}
   ];
 
-  constructor(private platform: Platform, settings: Settings, private statusBar: StatusBar, private splashScreen: SplashScreen) {
-  }
+  constructor(
+    private platform: Platform, 
+    private statusBar: StatusBar, 
+    private splashScreen: SplashScreen
+  ) { }
 
   ionViewDidLoad() {
     this.platform.ready().then(() => {

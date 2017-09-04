@@ -1,7 +1,7 @@
 import { NavController, NavParams, MenuController } from 'ionic-angular';
 import { Component } from '@angular/core';
 
-import { Image } from '../../services/image';
+import { ImageService } from '../../services/image.service';
 
 import { ImageDetailPage } from '../imageDetail/imageDetail';
 import { CameraPage } from '../camera/camera';
@@ -20,7 +20,12 @@ export class CanvasPage {
     _images: String[];
     _boxesJSon: any;
 
-    constructor(private menu: MenuController, private nav: NavController, private navParam: NavParams, private imageService: Image) {
+    constructor(
+        private menuCtrl: MenuController,
+        private nav: NavController,
+        private navParam: NavParams,
+        private imageService: ImageService
+    ) {
         console.log("canvas.ts/Constructor");
         this._toolkit = "y6W4gm";
         console.log("toolkit: " + this._toolkit);
@@ -46,6 +51,6 @@ export class CanvasPage {
 
     toggleMenu() {
         console.log("home/toggleMenu");
-        this.menu.toggle();
+        this.menuCtrl.toggle();
     }
 }

@@ -21,8 +21,10 @@ export class ReportPage {
         mode: 'date'
     };
 
-    constructor(private menu: MenuController) {
-        this.menu.enable(true);
+    constructor(
+        private menuCtrl: MenuController
+    ) {
+        this.menuCtrl.enable(true);
         this.initialise();
     }
 
@@ -40,6 +42,6 @@ export class ReportPage {
 
     toggleMenu() {
         console.log("home/toggleMenu");
-        this.menu.toggle();
+        this.menuCtrl.toggle();
     }
 }

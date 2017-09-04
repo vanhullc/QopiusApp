@@ -7,7 +7,12 @@
     </ion-buttons>
     <div id="logo" (click)="initialiseAlert()">
 			<img src="https://static1.squarespace.com/static/55ab8f1fe4b031edd6fa0ed9/t/599ea390f7e0aba9e964b91f/1503990062200/?format=1500w" />
-		</div>
+    </div>
+    <ion-buttons right>
+      <button ion-button (click)="filterAlertByLocation()">
+          <ion-icon color="$primary" name="pin"></ion-icon>
+      </button>
+    </ion-buttons>
     <ion-buttons right>
       <button ion-button (click)="switchArchiveMode()">
           <ion-icon color="$primary" name="archive"></ion-icon>
@@ -22,7 +27,10 @@
 
   <ion-item class="header">
     <p center>You got
-      <ion-badge center item-end>{{issuesNumber}}</ion-badge> alert{{mode}}</p>
+      <ion-badge center item-end>{{issuesNumber}}</ion-badge> 
+      alert{{mode}} in {{locationName}}
+    </p>
+
   </ion-item>
 
 

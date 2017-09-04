@@ -9,13 +9,16 @@ import { File } from '@ionic-native/file';
  * Api is a generic REST Api handler. Set your API url first.
  */
 @Injectable()
-export class Api {
+export class ApiService {
   url: string = 'https://apiqube.com/debug';
   postImageUrl: string = "http://train2.qopius.com:8000/upload";
   fileTransfer: FileTransferObject = this.transfer.create();
 
 
-  constructor(public http: Http, private transfer: FileTransfer) {
+  constructor(
+    public http: Http,
+     private transfer: FileTransfer
+    ) {
   }
 
   get(endpoint: string, params?: any, options?: RequestOptions) {
@@ -49,22 +52,24 @@ export class Api {
 
     let options = {
       fileName: body.taskID + '.zip',
-      mimeType: 'application/zip'
-      /*params: {
+      mimeType: 'application/zip',
+      chunkedMode: false,
+      params: {
         accountID: body.accountID,
         session_password: body.session_password,
         toolkitID: body.toolkitID,
         taskID: body.taskID,
         mode: body.mode,
         file: body.file
-      }*/
+      }
     }
 
-    let url = this.postImageUrl + "?accountID=" + body.accountID + "&session_password=" + body.session_password + "&toolkitID=" + body.toolkitID + "&taskID=" + body.taskID + "&mode=" + body.mode;
+    //let url = this.postImageUrl + "?accountID=" + body.accountID + "&session_password=" + body.session_password + "&toolkitID=" + body.toolkitID + "&taskID=" + body.taskID + "&mode=" + body.mode;
 
     console.log("api/postImage");
     console.log(body.file);
-    return this.fileTransfer.upload(body.file, url, options, true);
+
+    return this.fileTransfer.upload(body.file, this.postImageUrl, options, true);
   }
 
   post(endpoint: string, body: any, options?: RequestOptions) {
